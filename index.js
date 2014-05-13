@@ -17,6 +17,7 @@ var answer = new Buffer(JSON.stringify({broadcast: false, text:"Some bytes as an
 var message = new Buffer(JSON.stringify({broadcast: true, text:"Some bytes"}));
 
 var PORT = 4000;
+var list = document.getElementById('peers');
 
 broadcaster.on("listening", function () {
     console.log('listening on port ' + PORT);
@@ -26,13 +27,18 @@ broadcaster.on("listening", function () {
     });
 });
 
-broadcaster.on('message', function (msg, remote) {
-    if(msg.broadcast && remote.address !== network.address) {
-      console.log(remote.address + ':' + remote.port +' - ' + msg);
-      msg = JSON.parse(msg)
-    
+broadcaster.on('message', function (msg, remote) {   
+    console.log(remote.address + ':' + remote.port +' - ' + msg);
+    msg = JSON.parse(msg)
+    if(msg.broadcast ) {
       broadcaster.send(answer, 0, answer.length, remote.port, remote.address, function(err, bytes) {
           console.log('send answer');
+          var entry = document.createElement('li');
+          entry.innerHTML = remote.address
+          if(remote.address === network.address) { 
+            entry.innerHTML +=  ' (own)'
+          }
+          list.appendChild(entry);
       });
     }
 });
