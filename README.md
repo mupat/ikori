@@ -1,13 +1,26 @@
 # node chat
 
-## get it work on suse
+## How to install
 - install node via [nvm](https://github.com/creationix/nvm)
+- make sure you use node version `> 0.11`
 - npm install
-(if it not works manuel install nodewebkit -> use [nodewebkit installer](https://github.com/shama/nodewebkit) and install actual node-webkit version `npm install nodewebkit@0.9.2-4 --save`)
+- npm start
+
+## troubleshooting suse
 - if you get an error like 
 ```
 error while loading shared libraries: libudev.so.0: can
 not open shared object file: No such file or directory
 ```
-check this [site](https://github.com/rogerwang/node-webkit/wiki/The-solution-of-lacking-libudev.so.0) and run the `One line fix`
-- npm start
+check this [site](https://github.com/rogerwang/node-webkit/wiki/The-solution-of-lacking-libudev.so.0) and run the *One line fix*
+- `cd node_modules/nodewebkit/nodewebkit/`
+- `sed -i 's/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x30/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x31/g' nw`
+
+## troubleshooting mac
+- if you get an error like
+```
+Invalid package.json 
+Field 'main' is required.
+```
+rename `packag.json` in `nodewebkit`
+- `mv node_modules/nodewebkit/package.json node_modules/nodewebkit/_package.json`
