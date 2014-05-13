@@ -2,8 +2,9 @@
 var dgram = require('dgram');
 var Netmask = require('netmask').Netmask;
 var networks = require('os').networkInterfaces();
-var network = networks['eth0'][0];
 console.log(networks);
+var network = networks['en0'][1];
+console.log(network);
 
 var block = new Netmask(network.address, network.netmask);
 console.log(block);
@@ -13,8 +14,8 @@ var broadcast_address = block.broadcast;
 
 var broadcaster = dgram.createSocket("udp4");
 
-// var answer = new Buffer(JSON.stringify({broadcast: false, text:"Some bytes as answer"}));
-var message = new Buffer(JSON.stringify({broadcast: true, text:"Some bytes"}));
+var message = new Buffer(JSON.stringify({broadcast: true, text:"Hello"}));
+var answerBr = new Buffer(JSON.stringify({broadcast: false, text:"Hello back"}));
 
 var PORT = 4000;
 
@@ -31,21 +32,31 @@ broadcaster.on('message', function (msg, remote) {
     console.log(remote.address + ':' + remote.port +' - ' + msg);
     msg = JSON.parse(msg);
     if(msg.broadcast) {
-      if(remote.address === network.address) return;
-      localPeer.createOffer(function(desc) {
-        var answer = new Buffer(JSON.stringify(desc));
-        broadcaster.send(answer, 0, answer.length, remote.port, remote.address, function(err, bytes) {
-              console.log('send answer');
-              addPeer(remote);
-        });
+      broadcaster.send(answerBr, 0, answerBr.length, remote.port, remote.address, function(err, bytes) {
+        console.log('send answer');
+        addPeer(remote);
       });
     }
-    else { 
-      addPeer(remote);
-      localPeer.setLocalDescription(msg);
+    else if(msg.offer) { 
+      console.log('offer msg get', msg);
+      var offer = new SessionDescription(msg);
+      localPeer.setRemoteDescription(offer);
       localPeer.createAnswer(function(desc) {
-        localPeer.setRemoteDescription(desc)
+        localPeer.setLocalDescription(desc);
+        desc.answer = true;
+        console.log('answer msg obj', desc);
+        var msg = new Buffer(JSON.stringify(desc));
+        console.log('answer msg string', msg);
+        broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
+          console.log('send answer');
+        });
       });
+    } else if(msg.answer) {
+      console.log('answer msg get', msg);
+      var answer = new SessionDescription(msg);
+      localPeer.setRemoteDescription(answer);
+    } else if(remote.address !== network.address) {
+        addPeer(remote);
     }
 });
 
@@ -59,10 +70,35 @@ addPeer = function (remote) {
     entry.innerHTML +=  ' (own)'
   }
   list.appendChild(entry);
+
+  if(remote.address === network.address) { 
+    return;
+  }
+
+  entry.onclick = function() {
+    localPeer.createOffer(function(desc) {
+      localPeer.setLocalDescription(desc);
+      desc.offer = true;
+      console.log('offer msg obj', desc);
+      var msg = new Buffer(JSON.stringify(desc));
+      console.log('offer msg string', msg);
+      broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
+        console.log('send offer');
+      }); 
+    });
+  }
 }
 
+// localPeer.createOffer(function(desc) {
+//         var answer = new Buffer(JSON.stringify(desc));
+        
+//       });
 
 
+ // localPeer.setLocalDescription(msg);
+ //      localPeer.createAnswer(function(desc) {
+ //        localPeer.setRemoteDescription(desc)
+ //      });
 
 // webrtc stuff
 var localPeer, remotePeer, sendChannel, receiveChannel = null;
