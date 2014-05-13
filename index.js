@@ -52,7 +52,7 @@ broadcaster.on('message', function (msg, remote) {
 broadcaster.bind(PORT);
 
 var list = document.getElementById('peers');
-addPeer = function (argument) {
+addPeer = function (remote) {
   var entry = document.createElement('li');
   entry.innerHTML = remote.address
   if(remote.address === network.address) { 
