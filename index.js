@@ -1,33 +1,58 @@
-var os = require('os');
+//network stuff
+var dgram = require('dgram');
+var Netmask = require('netmask').Netmask;
+var networks = require('os').networkInterfaces();
+var network = networks['eth0'][0];
+console.log(networks);
 
-console.log(document.getElementById('tmp'));
-console.log(os.tmpdir());
-document.getElementById('tmp').innerHTML = os.tmpdir();
-document.getElementById('host').innerHTML = os.hostname();
-document.getElementById('type').innerHTML = os.type();
-document.getElementById('platform').innerHTML = os.platform();
-document.getElementById('arch').innerHTML = os.arch();
-document.getElementById('release').innerHTML = os.release();
-document.getElementById('uptime').innerHTML = os.uptime();
-document.getElementById('loadavg').innerHTML = os.loadavg();
-document.getElementById('totalmem').innerHTML = os.totalmem();
-document.getElementById('freemem').innerHTML = os.freemem();
-document.getElementById('cpus').innerHTML = JSON.stringify(os.cpus());
-document.getElementById('network').innerHTML = JSON.stringify(os.networkInterfaces());
+var block = new Netmask(network.address, network.netmask);
+console.log(block);
+console.log(block.broadcast); 
+
+var broadcast_address = block.broadcast;
+
+var broadcaster = dgram.createSocket("udp4");
+
+var answer = new Buffer(JSON.stringify({broadcast: false, text:"Some bytes as answer"}));
+var message = new Buffer(JSON.stringify({broadcast: true, text:"Some bytes"}));
+
+var PORT = 4000;
+
+broadcaster.on("listening", function () {
+    console.log('listening on port ' + PORT);
+    broadcaster.setBroadcast(true);
+    broadcaster.send(message, 0, message.length, PORT, broadcast_address, function(err, bytes) {
+        console.log('send broadcast');
+    });
+});
+
+broadcaster.on('message', function (msg, remote) {
+    if(msg.broadcast && remote.address !== network.address) {
+      console.log(remote.address + ':' + remote.port +' - ' + msg);
+      msg = JSON.parse(msg)
+    
+      broadcaster.send(answer, 0, answer.length, remote.port, remote.address, function(err, bytes) {
+          console.log('send answer');
+      });
+    }
+});
+
+broadcaster.bind(PORT);
 
 
 
 
 
+
+// webrtc stuff
 var localPeer, remotePeer, sendChannel, receiveChannel = null;
  
 localPeer = new webkitRTCPeerConnection(null, {
   optional: [{RTPDataChannels: true}]
 });
  
-console.log(localPeer);
 sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
-console.log(sendChannel);
+
 localPeer.onicecandidate = function(event) {
   if (event.candidate) {
     remotePeer.addIceCandidate(event.candidate);
