@@ -120,6 +120,10 @@ localPeer = new webkitRTCPeerConnection(null, {
  
 sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
 
+sendChannel.onmessage = function(event) {
+  console.log('message', event);
+}
+
 localPeer.onicecandidate = function(event) {
   if (event.candidate) {
     var candidate = event.candidate;
