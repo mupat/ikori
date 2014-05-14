@@ -120,11 +120,17 @@ localPeer = new webkitRTCPeerConnection(null, {
  
 sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
 
-// localPeer.onicecandidate = function(event) {
-//   if (event.candidate) {
-//     remotePeer.addIceCandidate(event.candidate);
-//   }
-// }
+localPeer.onicecandidate = function(event) {
+  if (event.candidate) {
+    var candidate = event.candidate;
+    localPeer.addIceCandidate(new RTCIceCandidate({
+      sdpMLineIndex: candidate.sdpMLineIndex,
+      candidate: candidate.candidate
+    }));
+
+    // localPeer.addIceCandidate(event.candidate);
+  }
+}
  
 // remotePeer = new webkitRTCPeerConnection(null, {
 //   optional: [{RTPDataChannels: true}]
@@ -167,6 +173,7 @@ localPeer.ondatachannel = function(event) {
 // });
  
 document.getElementById("send").onclick = function() {
+  console.log(sendChannel);
   if (sendChannel.readyState !== 'open') {
     alert('is not open');
     return;
