@@ -19,7 +19,9 @@ var answerBr = new Buffer(JSON.stringify({broadcast: false, text:"Hello back"}))
 
 var PORT = 4000;
 
+try {
 
+  
 broadcaster.on("listening", function () {
     console.log('listening on port ' + PORT);
     broadcaster.setBroadcast(true);
@@ -39,22 +41,22 @@ broadcaster.on('message', function (msg, remote) {
     }
     else if(msg.offer) { 
       console.log('offer msg get', msg);
-      var offer = new webkitSessionDescription(msg);
-      localPeer.setRemoteDescription(offer);
+      // var offer = new webkitSessionDescription(msg);
+      localPeer.setRemoteDescription(msg);
       localPeer.createAnswer(function(desc) {
         localPeer.setLocalDescription(desc);
         desc.answer = true;
         console.log('answer msg obj', desc);
         var msg = new Buffer(JSON.stringify(desc));
-        console.log('answer msg string', msg);
+        console.log('answer msg string', msg.toSring());
         broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
           console.log('send answer');
         });
       });
     } else if(msg.answer) {
       console.log('answer msg get', msg);
-      var answer = new SessionDescription(msg);
-      localPeer.setRemoteDescription(answer);
+      // var answer = new SessionDescription(msg);
+      localPeer.setRemoteDescription(msg);
     } else if(remote.address !== network.address) {
         addPeer(remote);
     }
@@ -81,7 +83,7 @@ addPeer = function (remote) {
       desc.offer = true;
       console.log('offer msg obj', desc);
       var msg = new Buffer(JSON.stringify(desc));
-      console.log('offer msg string', msg);
+      console.log('offer msg string', msg.toSring());
       broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
         console.log('send offer');
       }); 
@@ -142,6 +144,15 @@ localPeer.ondatachannel = function(event) {
 // });
  
 document.getElementById("send").onclick = function() {
+  if (sendChannel.readyState !== 'open') {
+    alert('is not open');
+    return;
+  }
   var data = document.getElementById("sendText").value;
   sendChannel.send(data);
 };
+
+} catch(e) {
+  alert(e)
+}
+
