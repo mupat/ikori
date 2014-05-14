@@ -40,6 +40,7 @@ broadcaster.on('message', function (msg, remote) {
       });
     }
     else if(msg.offer) { 
+      createPeer();
       console.log('offer msg get', msg);
       console.log('type offer', typeof msg);
       var offer = new RTCSessionDescription(msg);
@@ -56,7 +57,6 @@ broadcaster.on('message', function (msg, remote) {
         });
       });
     } else if(msg.answer) {
-      if (localPeer === null) createPeer();
       console.log('answer msg get', msg);
       var answer = new RTCSessionDescription(msg);
       localPeer.setRemoteDescription(answer);
