@@ -120,6 +120,10 @@ localPeer = new webkitRTCPeerConnection(null, {
  
 sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
 
+sendChannel.onopen = function(event) {
+  console.log('opened', event);
+}
+
 sendChannel.onmessage = function(event) {
   console.log('message', event);
 }
