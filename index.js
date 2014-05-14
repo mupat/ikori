@@ -21,7 +21,7 @@ var PORT = 4000;
 
 try {
 
-  
+
 broadcaster.on("listening", function () {
     console.log('listening on port ' + PORT);
     broadcaster.setBroadcast(true);
@@ -41,8 +41,10 @@ broadcaster.on('message', function (msg, remote) {
     }
     else if(msg.offer) { 
       console.log('offer msg get', msg);
-      // var offer = new webkitSessionDescription(msg);
-      localPeer.setRemoteDescription(msg);
+      console.log('type offer', typeof msg);
+      var offer = new RTCSessionDescription(msg);
+      console.log('offer parsed', offer);
+      localPeer.setRemoteDescription(offer);
       localPeer.createAnswer(function(desc) {
         localPeer.setLocalDescription(desc);
         desc.answer = true;
@@ -55,10 +57,13 @@ broadcaster.on('message', function (msg, remote) {
       });
     } else if(msg.answer) {
       console.log('answer msg get', msg);
-      // var answer = new SessionDescription(msg);
+      var answer = new RTCSessionDescription(msg);
       localPeer.setRemoteDescription(msg);
     } else if(remote.address !== network.address) {
         addPeer(remote);
+    } else {
+      console.log('remote: ', remote);
+      console.log('msg: ', msg);
     }
 });
 
@@ -73,13 +78,17 @@ addPeer = function (remote) {
   }
   list.appendChild(entry);
 
-  if(remote.address === network.address) { 
-    return;
-  }
+  // if(remote.address === network.address) { 
+  //   return;
+  // }
 
   entry.onclick = function() {
     localPeer.createOffer(function(desc) {
       localPeer.setLocalDescription(desc);
+      // var msg = {
+      //   offer: true,
+      //   desc: desc
+      // }
       desc.offer = true;
       console.log('offer msg obj', desc);
       var msg = new Buffer(JSON.stringify(desc));
@@ -133,6 +142,20 @@ localPeer.ondatachannel = function(event) {
     document.getElementById("receive").innerHTML = event.data
   }
 }
+
+// localPeer.createOffer(function(desc) {
+//   console.log(desc);
+//   // localPeer.setLocalDescription(desc);
+//   var test = new Buffer(desc);
+//   var test2 = new Buffer(JSON.stringify(desc));
+//   console.log('test', test.toJSON());
+//   console.log('test2', test2.toJSON());
+//   console.log('test str', test.toString());
+//   console.log('test2 str', test2.toString());
+//   console.log('desc', desc.toString());
+//   console.log('test2 json', JSON.parse(test2));
+//   // localPeer.setLocalDescription(JSON.parse(test2));
+// });
  
 // localPeer.createOffer(function(desc) {
 //   localPeer.setLocalDescription(desc);
