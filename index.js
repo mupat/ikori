@@ -48,7 +48,7 @@ broadcaster.on('message', function (msg, remote) {
         desc.answer = true;
         console.log('answer msg obj', desc);
         var msg = new Buffer(JSON.stringify(desc));
-        console.log('answer msg string', msg.toSring());
+        // console.log('answer msg string', msg.toSring());
         broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
           console.log('send answer');
         });
@@ -83,7 +83,7 @@ addPeer = function (remote) {
       desc.offer = true;
       console.log('offer msg obj', desc);
       var msg = new Buffer(JSON.stringify(desc));
-      console.log('offer msg string', msg.toSring());
+      // console.log('offer msg string', msg.toSring());
       broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
         console.log('send offer');
       }); 
