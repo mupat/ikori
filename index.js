@@ -18,7 +18,7 @@ var message = new Buffer(JSON.stringify({broadcast: true, text:"Hello"}));
 var answerBr = new Buffer(JSON.stringify({broadcast: false, text:"Hello back"}));
 
 var PORT = 4000;
-
+var localPeer, remotePeer, sendChannel, receiveChannel = null;
 try {
 
 
@@ -83,6 +83,7 @@ addPeer = function (remote) {
   // }
 
   entry.onclick = function() {
+    createPeer();
     localPeer.createOffer(function(desc) {
       localPeer.setLocalDescription(desc);
       // var msg = {
@@ -112,7 +113,8 @@ addPeer = function (remote) {
  //      });
 
 // webrtc stuff
-var localPeer, remotePeer, sendChannel, receiveChannel = null;
+createPeer = function() {
+  
  
 localPeer = new webkitRTCPeerConnection(null, {
   optional: [{RTPDataChannels: true}]
@@ -189,6 +191,8 @@ document.getElementById("send").onclick = function() {
   var data = document.getElementById("sendText").value;
   sendChannel.send(data);
 };
+}
+
 
 } catch(e) {
   alert(e)
