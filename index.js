@@ -3,7 +3,7 @@ var dgram = require('dgram');
 var Netmask = require('netmask').Netmask;
 var networks = require('os').networkInterfaces();
 console.log(networks);
-var network = networks['en0'][1];
+var network = networks['eth0'][0];
 console.log(network);
 
 var block = new Netmask(network.address, network.netmask);
@@ -39,7 +39,7 @@ broadcaster.on('message', function (msg, remote) {
     }
     else if(msg.offer) { 
       console.log('offer msg get', msg);
-      var offer = new SessionDescription(msg);
+      var offer = new webkitSessionDescription(msg);
       localPeer.setRemoteDescription(offer);
       localPeer.createAnswer(function(desc) {
         localPeer.setLocalDescription(desc);
@@ -109,11 +109,11 @@ localPeer = new webkitRTCPeerConnection(null, {
  
 sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
 
-localPeer.onicecandidate = function(event) {
-  if (event.candidate) {
-    remotePeer.addIceCandidate(event.candidate);
-  }
-}
+// localPeer.onicecandidate = function(event) {
+//   if (event.candidate) {
+//     remotePeer.addIceCandidate(event.candidate);
+//   }
+// }
  
 // remotePeer = new webkitRTCPeerConnection(null, {
 //   optional: [{RTPDataChannels: true}]
