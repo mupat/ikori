@@ -56,6 +56,7 @@ broadcaster.on('message', function (msg, remote) {
         });
       });
     } else if(msg.answer) {
+      if (localPeer === null) createPeer();
       console.log('answer msg get', msg);
       var answer = new RTCSessionDescription(msg);
       localPeer.setRemoteDescription(answer);
