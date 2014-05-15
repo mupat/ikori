@@ -2,8 +2,11 @@
 var dgram = require('dgram');
 var Netmask = require('netmask').Netmask;
 var networks = require('os').networkInterfaces();
+
+config = require('./config/dev.json');
+console.log(config);
 console.log(networks);
-var network = networks['eth0'][0];
+var network = networks[config.network.interface][config.network.index];
 console.log(network);
 
 var block = new Netmask(network.address, network.netmask);
@@ -33,6 +36,7 @@ broadcaster.on("listening", function () {
 broadcaster.on('message', function (msg, remote) {   
     console.log(remote.address + ':' + remote.port +' - ' + msg);
     msg = JSON.parse(msg);
+
     if(msg.broadcast) {
       broadcaster.send(answerBr, 0, answerBr.length, remote.port, remote.address, function(err, bytes) {
         console.log('send answer');
@@ -40,7 +44,31 @@ broadcaster.on('message', function (msg, remote) {
       });
     }
     else if(msg.offer) { 
-      createPeer();
+      localPeer = new webkitRTCPeerConnection(null, {
+        optional: [{RTPDataChannels: true}]
+      });
+
+      localPeer.ondatachannel = function(event) {
+        sendChannel = event.channel
+        sendChannel.onmessage = function (event) {
+          document.getElementById("receive").innerHTML = event.data
+        }
+      }
+
+      localPeer.onicecandidate = function(event) {
+        if (event.candidate) {
+          var candidate = event.candidate;
+          candidate.ice = true;
+          console.log('ice msg obj', candidate);
+          var msg = new Buffer(JSON.stringify(candidate));
+
+          broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
+            console.log('send ice');
+          }); 
+        }
+      }
+
+
       console.log('offer msg get', msg);
       console.log('type offer', typeof msg);
       var offer = new RTCSessionDescription(msg);
@@ -60,8 +88,14 @@ broadcaster.on('message', function (msg, remote) {
       console.log('answer msg get', msg);
       var answer = new RTCSessionDescription(msg);
       localPeer.setRemoteDescription(answer);
-    } else if(remote.address !== network.address) {
-        addPeer(remote);
+    } else if(msg.ice) {
+      console.log('answer msg ice', msg);
+      localPeer.addIceCandidate(new RTCIceCandidate({
+        sdpMLineIndex: msg.sdpMLineIndex,
+        candidate: msg.candidate
+      }));
+    } else if (remote.address !== network.address) {
+      addPeer(remote);
     } else {
       console.log('remote: ', remote);
       console.log('msg: ', msg);
@@ -84,7 +118,35 @@ addPeer = function (remote) {
   // }
 
   entry.onclick = function() {
-    createPeer();
+    localPeer = new webkitRTCPeerConnection(null, {
+      optional: [{RTPDataChannels: true}]
+    });
+     
+    sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
+
+    sendChannel.onopen = function(event) {
+      console.log('opened', event);
+    }
+
+    sendChannel.onmessage = function(event) {
+      console.log('message', event);
+      document.getElementById("receive").innerHTML = event.data
+    }
+
+    localPeer.onicecandidate = function(event) {
+      if (event.candidate) {
+        var candidate = event.candidate;
+        candidate.ice = true;
+        console.log('ice msg obj', candidate);
+        var msg = new Buffer(JSON.stringify(candidate));
+
+        broadcaster.send(msg, 0, msg.length, remote.port, remote.address, function(err, bytes) {
+          console.log('send ice');
+        }); 
+      }
+    }
+
+    // createPeer();
     localPeer.createOffer(function(desc) {
       localPeer.setLocalDescription(desc);
       // var msg = {
@@ -114,34 +176,10 @@ addPeer = function (remote) {
  //      });
 
 // webrtc stuff
-createPeer = function() {
+// createPeer = function() {
   
  
-localPeer = new webkitRTCPeerConnection(null, {
-  optional: [{RTPDataChannels: true}]
-});
- 
-sendChannel = localPeer.createDataChannel("sendDataChannel", {reliable: false});
 
-sendChannel.onopen = function(event) {
-  console.log('opened', event);
-}
-
-sendChannel.onmessage = function(event) {
-  console.log('message', event);
-}
-
-localPeer.onicecandidate = function(event) {
-  if (event.candidate) {
-    var candidate = event.candidate;
-    localPeer.addIceCandidate(new RTCIceCandidate({
-      sdpMLineIndex: candidate.sdpMLineIndex,
-      candidate: candidate.candidate
-    }));
-
-    // localPeer.addIceCandidate(event.candidate);
-  }
-}
  
 // remotePeer = new webkitRTCPeerConnection(null, {
 //   optional: [{RTPDataChannels: true}]
@@ -153,12 +191,7 @@ localPeer.onicecandidate = function(event) {
 //   }
 // }
  
-localPeer.ondatachannel = function(event) {
-  receiveChannel = event.channel
-  receiveChannel.onmessage = function (event) {
-    document.getElementById("receive").innerHTML = event.data
-  }
-}
+
 
 // localPeer.createOffer(function(desc) {
 //   console.log(desc);
@@ -185,14 +218,14 @@ localPeer.ondatachannel = function(event) {
  
 document.getElementById("send").onclick = function() {
   console.log(sendChannel);
-  if (sendChannel.readyState !== 'open') {
-    alert('is not open');
-    return;
-  }
+  // if (sendChannel.readyState !== 'open') {
+  //   alert('is not open');
+  //   return;
+  // }
   var data = document.getElementById("sendText").value;
   sendChannel.send(data);
 };
-}
+// }
 
 
 } catch(e) {
