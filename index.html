@@ -1,16 +1,29 @@
-<html>
+<!doctype html>
+<html lang="en" ng-app="chatApp">
 <head>
-  <title>test</title>
+  <meta charset="utf-8">
+  <title>node_chat</title>
+  <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="js/controller/index.js"></script>
+  <script type="text/javascript" src="js/services/index.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
-Peers:
-<ul id="peers"></ul>
-<hr>
+  <div ng-controller="SessionCtrl">
+    <h3>Peers:</h3>
+    <ul id="peers">
+      <li ng-repeat="(ip, data) in peers | orderBy:name" ng-click="startConnection(data.remote)">
+        {{data.infos.name}} ({{data.remote.address}}:{{data.remote.port}})
+      </li>
+    </ul>
+  </div>
+
+<!-- <hr>
 <button id="send">send</button>
 <textarea id="sendText"></textarea>
 <hr>
-<div id="receive"></div>
+<div id="receive"></div> -->
 
-<script type="text/javascript" src="js/index.js"></script>
+<!-- <script type="text/javascript" src="js/index.js"></script> -->
 </body>
 </html>
