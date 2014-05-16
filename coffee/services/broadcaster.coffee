@@ -7,7 +7,6 @@ class Broadcaster
     broadcast: 'broadcast'
     broadcastAnswer: 'broadcast_answer'
     peerInformations: 'peer_infos'
-    peerInformationsBack: 'peer_infos_back'
     offer: 'offer'
     answer: 'answer'
     ice: 'ice'
@@ -20,18 +19,18 @@ class Broadcaster
       try
         msgJSON = JSON.parse msg
       catch e
-        return @$rootScope.emit 'error', 'got message that isnt a json string', msg.toString(), remote
+        return @$rootScope.$emit 'error', 'got message that isnt a json string', msg.toString(), remote
 
-      return if @_isOwnRemote remote
+      return if @_isOwnRemote remote #ignore own messages
 
       switch msgJSON.type
         when @TYPES.broadcast then @sendBroadcastAnswer remote
-        when @TYPES.broadcastAnswer then @sendPeerInformations remote
-        when @TYPES.peerInformations then @sendPeerInformationsBack remote
-        when @TYPES.offer then @$rootScope.emit 'offer', msgJSON.data
-        when @TYPES.answer then @$rootScope.emit 'answer', msgJSON.data
-        when @TYPES.ice then @$rootScope.emit 'ice', msgJSON.data
-        else @$rootScope.emit 'error', 'got message with undefined type', msgJSON, remote
+        when @TYPES.broadcastAnswer then @sendPeerInformations(remote); @$rootScope.$emit('newPeer', remote, msgJSON.data);
+        when @TYPES.peerInformations then @$rootScope.$emit 'newPeer', remote, msgJSON.data
+        when @TYPES.offer then @$rootScope.$emit 'offer', msgJSON.data
+        when @TYPES.answer then @$rootScope.$emit 'answer', msgJSON.data
+        when @TYPES.ice then @$rootScope.$emit 'ice', msgJSON.data
+        else @$rootScope.$emit 'error', 'got message with undefined type', msgJSON, remote
 
   sendBroadcasts: ->
     @socket.on 'listening', =>
@@ -50,8 +49,12 @@ class Broadcaster
     @_send {type: @TYPES.offer, data: offer}, remote.port, remote.address
 
   sendBroadcastAnswer: (remote) ->
-    data = @_getUserInfos
-    @_send {type: @TYPES.broadcast_answer, data: data}, remote.port, remote.address
+    data = @_getUserInfos()
+    @_send {type: @TYPES.broadcastAnswer, data: data}, remote.port, remote.address
+
+  sendPeerInformations: (remote) ->
+    data = @_getUserInfos()
+    @_send {type: @TYPES.peerInformations, data: data}, remote.port, remote.address
 
   sendBroadcast: (address) ->
     data = @_getUserInfos
@@ -66,13 +69,13 @@ class Broadcaster
     try
       msgStr = JSON.stringify msgJSON
     catch e
-      return @$rootScope.emit 'error', 'msg json is not valid', e
+      return @$rootScope.$emit 'error', 'msg json is not valid', e
 
     msg = new Buffer msgStr
     @socket.setBroadcast broadcast
     @socket.send msg, 0, msg.length, port, address, (err, bytes) =>
-      return @$rootScope.emit 'error' if err
-      @$rootScope.emit 'sent', msgStr
+      return @$rootScope.$emit 'error' if err
+      @$rootScope.$emit 'sent', msgStr
 
   _isOwnRemote: (remote) ->
     for network in @networkInterfaces
