@@ -25,11 +25,11 @@ class Broadcaster
 
       switch msgJSON.type
         when @TYPES.broadcast then @sendBroadcastAnswer remote
-        when @TYPES.broadcastAnswer then @sendPeerInformations(remote); @$rootScope.$emit('newPeer', remote, msgJSON.data);
-        when @TYPES.peerInformations then @$rootScope.$emit 'newPeer', remote, msgJSON.data
-        when @TYPES.offer then @$rootScope.$emit 'offer', msgJSON.data
-        when @TYPES.answer then @$rootScope.$emit 'answer', msgJSON.data
-        when @TYPES.ice then @$rootScope.$emit 'ice', msgJSON.data
+        when @TYPES.broadcastAnswer then @sendPeerInformations(remote); @$rootScope.$broadcast('newPeer', remote, msgJSON.data);
+        when @TYPES.peerInformations then @$rootScope.$broadcast 'newPeer', remote, msgJSON.data
+        when @TYPES.offer then @$rootScope.$broadcast 'offer', msgJSON.data
+        when @TYPES.answer then @$rootScope.$broadcast 'answer', msgJSON.data
+        when @TYPES.ice then @$rootScope.$broadcast 'ice', msgJSON.data
         else @$rootScope.$emit 'error', 'got message with undefined type', msgJSON, remote
 
   sendBroadcasts: ->

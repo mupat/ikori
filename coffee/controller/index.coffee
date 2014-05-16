@@ -1,16 +1,12 @@
 chatAppControllers = angular.module 'chatApp.controllers', []
 
-sessionCtrl = ($rootScope, $scope, broadcaster) ->
+sessionCtrl = ($scope, broadcaster) ->
   $scope.peers = {}
-  $rootScope.$on 'newPeer', (scope, remote, data) ->
+  $scope.$on 'newPeer', (scope, remote, data) ->
     $scope.$apply ->
       $scope.peers[remote.address] = 
         remote: remote
         infos: data
-
-  # on for debug purpose
-  $rootScope.$on 'sent', (scope, msg) ->
-    console.log 'sent', msg
 
   # start the broadcast
   broadcaster.sendBroadcasts()
@@ -20,7 +16,6 @@ sessionCtrl = ($rootScope, $scope, broadcaster) ->
     console.log 'start', remote
 
 chatAppControllers.controller 'SessionCtrl', [
-  '$rootScope'
   '$scope'
   'broadcaster'
   sessionCtrl
