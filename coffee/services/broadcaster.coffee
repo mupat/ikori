@@ -23,13 +23,14 @@ class Broadcaster
 
       return if @_isOwnRemote remote #ignore own messages
 
+      @$rootScope.$broadcast 'received', remote, msg.toString()
       switch msgJSON.type
         when @TYPES.broadcast then @sendBroadcastAnswer remote
         when @TYPES.broadcastAnswer then @sendPeerInformations(remote); @$rootScope.$broadcast('newPeer', remote, msgJSON.data);
         when @TYPES.peerInformations then @$rootScope.$broadcast 'newPeer', remote, msgJSON.data
-        when @TYPES.offer then @$rootScope.$broadcast 'offer', msgJSON.data
-        when @TYPES.answer then @$rootScope.$broadcast 'answer', msgJSON.data
-        when @TYPES.ice then @$rootScope.$broadcast 'ice', msgJSON.data
+        when @TYPES.offer then @$rootScope.$broadcast 'offer', remote, msgJSON.data
+        when @TYPES.answer then @$rootScope.$broadcast 'answer', remote, msgJSON.data
+        when @TYPES.ice then @$rootScope.$broadcast 'ice', remote, msgJSON.data
         else @$rootScope.$emit 'error', 'got message with undefined type', msgJSON, remote
 
   sendBroadcasts: ->

@@ -4,7 +4,6 @@ os = require 'os'
 class Network
   IP6: 'IPv6'
   constructor: ->
-    console.log 'network contrs'
     @interfaces = @cleanup os.networkInterfaces()
     @addBroadcastAddress network for network in @interfaces
     # @block = new Netmask(network.address, network.netmask);
