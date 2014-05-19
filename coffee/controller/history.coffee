@@ -15,10 +15,12 @@ class History
         @_add msg, remote.address, remote.address
 
     $scope.$on 'newOwnMessage', (scope, msg, remote) =>
+      console.log 'own', msg, remote
       @_add msg, user.getInfos()['name'], remote.address
   
   _add: (msg, origin, identifier) ->
-    @$scope.history.push {
+    console.log 'hist', @histories, identifier
+    @histories[identifier].push {
       time: new Date()
       msg: msg
       origin: origin
