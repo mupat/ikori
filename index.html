@@ -23,13 +23,19 @@
       </li>
     </ul>
   </div>
-
-<!-- <hr>
-<button id="send">send</button>
-<textarea id="sendText"></textarea>
-<hr>
-<div id="receive"></div> -->
-
-<!-- <script type="text/javascript" src="js/index.js"></script> -->
+  <div ng-controller="HistoryCtrl">
+    <h4>History</h4>
+    <ul>
+      <li ng-repeat="line in history | orderBy:line.time">
+        [{{line.time}}] : {{line.msg}}
+      </li>
+    </ul>
+  </div>
+  <div ng-controller="MsgCtrl">
+    <form ng-submit="send()">
+      <textarea name="msg" ng-model="msg" required ng-disabled="!open"></textarea>
+      <button type="submit" ng-disabled="!open">send</button>
+    </form>
+  </div>
 </body>
 </html>

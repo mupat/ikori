@@ -20,6 +20,10 @@ class WebRTC
     @$rootScope.$on 'remoteClose', (scope, remote) =>
       @_close remote
 
+  send: (remote, msg) ->
+    return unless @_connectionExists remote
+    @connections[remote.address].channel.send msg
+
   connect: (remote) ->
     return if @_connectionExists remote
     @_connectByOffer remote
