@@ -1,7 +1,8 @@
-Broadcaster = require './js/services/broadcaster'
-Network = require './js/services/network'
-Logger = require './js/services/logger'
-WebRTC = require './js/services/webrtc/'
+path = "./js/services/"
+Broadcaster = require "#{path}broadcaster"
+Network = require "#{path}network"
+Logger = require "#{path}logger"
+WebRTC = require "#{path}webrtc/"
 
 chatAppServices = angular.module 'chatApp.services', []
 

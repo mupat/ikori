@@ -1,5 +1,8 @@
 class Logger
   constructor: ($rootScope) ->
+    $rootScope.$on 'started', (scope) ->
+      console.log 'broadcast started'
+
     $rootScope.$on 'sent', (scope, msg) ->
       console.log 'sent message', msg
 

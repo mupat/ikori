@@ -10,6 +10,7 @@ class Broadcaster
     offer: 'offer'
     answer: 'answer'
     ice: 'ice'
+    close: 'close'
 
   constructor: (@$rootScope, network) ->
     @networkInterfaces = network.interfaces
@@ -31,6 +32,7 @@ class Broadcaster
         when @TYPES.offer then @$rootScope.$broadcast 'offer', remote, msgJSON.data
         when @TYPES.answer then @$rootScope.$broadcast 'answer', remote, msgJSON.data
         when @TYPES.ice then @$rootScope.$broadcast 'ice', remote, msgJSON.data
+        when @TYPES.close then @$rootScope.$broadcast 'remoteClose', remote
         else @$rootScope.$emit 'error', 'got message with undefined type', msgJSON, remote
 
   sendBroadcasts: ->
@@ -60,6 +62,9 @@ class Broadcaster
   sendBroadcast: (address) ->
     data = @_getUserInfos
     @_send {type: @TYPES.broadcast, data: data}, @PORT, address, true
+
+  sendClose: (remote) ->
+    @_send {type: @TYPES.close}, remote.port, remote.address
 
   _getUserInfos: ->
     return {

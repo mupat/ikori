@@ -9,11 +9,17 @@
   <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
-  <div ng-controller="SessionCtrl">
+  <div ng-controller="PeerCtrl">
     <h3>Peers:</h3>
     <ul id="peers">
-      <li ng-repeat="(ip, data) in peers | orderBy:name" ng-click="startConnection(data.remote)">
-        {{data.infos.name}} ({{data.remote.address}}:{{data.remote.port}})
+      <li ng-repeat="(ip, data) in peers | orderBy:name">
+        <div>
+          <div ng-click="startConnection(data.remote)">
+            <strong>{{data.infos.name}}</strong> 
+            <span>({{data.remote.address}}:{{data.remote.port}})</span>
+          </div>
+          <button ng-disabled="!data.open" ng-click="stopConnection(data.remote)">close</button>
+        </div>
       </li>
     </ul>
   </div>

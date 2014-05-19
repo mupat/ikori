@@ -17,15 +17,26 @@ class WebRTC
       return if @_connectionExists remote
       @connections[remote.address].setRemoteDescription desc
 
+    @$rootScope.$on 'remoteClose', (scope, remote) =>
+      # return unless @_connectionExists remote
+      @_close remote
+
   connect: (remote) ->
+    console.log @connections, @connections[remote.address]
     return if @_connectionExists remote
     @_connectByOffer remote
 
   close: (remote) ->
+    @_close remote
+    @broadcaster.sendClose remote
+    
+  _close: (remote) ->
     con = @connections[remote.address]
+    return unless con?
     con.channel.close()
     con.con.close()
     delete @connections[remote.address]
+    console.log 'after delete', @connections
 
   _connectionExists: (remote) ->
     con = @connections[remote.address]
@@ -51,16 +62,16 @@ class WebRTC
 
   _registerChannelEvents: (con, channel, remote) ->
     channel.onmessage = (event) =>
-      @$rootScope.$broadcast 'newMessage', event.data, event, channel, con, remote
+      @$rootScope.$broadcast 'newMessage', event.data, event, remote, channel, con
 
     channel.onerror = (error) =>
-      @$rootScope.$emit 'error', 'error by using the datachannel', error, channel, con, remote
+      @$rootScope.$emit 'error', 'error by using the datachannel', error, remote, channel, con
 
     channel.onopen = =>
-      @$rootScope.$broadcast 'open', channel, con, remote
+      @$rootScope.$broadcast 'open', remote, channel, con
 
     channel.onclose = =>
-      @$rootScope.$broadcast 'close', channel, con, remote
+      @$rootScope.$broadcast 'close', remote, channel, con
 
   _sendICE: (con, candidate, remote) ->
     @broadcaster.sendICE candidate, remote unless con.signalingState is 'stable'
