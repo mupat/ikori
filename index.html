@@ -9,6 +9,11 @@
   <script type="text/javascript" src="js/index.js"></script>
 </head>
 <body>
+  <div ng-controller="UserCtrl">
+    <span>This is you: </span>
+    <strong>{{name}}</strong>
+  </div>
+  <hr>
   <div ng-controller="PeerCtrl">
     <h3>Peers:</h3>
     <ul id="peers">
@@ -23,17 +28,19 @@
       </li>
     </ul>
   </div>
+  <br>
   <div ng-controller="HistoryCtrl">
     <h4>History</h4>
     <ul>
       <li ng-repeat="line in history | orderBy:line.time">
-        [{{line.time}}] : {{line.msg}}
+        [{{line.origin}}] [{{line.time}}] : {{line.msg}}
       </li>
     </ul>
   </div>
+  <br>
   <div ng-controller="MsgCtrl">
     <form ng-submit="send()">
-      <textarea name="msg" ng-model="msg" required ng-disabled="!open"></textarea>
+      <input type="text" name="msg" ng-model="msg" required ng-disabled="!open"></textarea>
       <button type="submit" ng-disabled="!open">send</button>
     </form>
   </div>

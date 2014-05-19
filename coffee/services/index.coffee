@@ -3,12 +3,15 @@ Broadcaster = require "#{path}broadcaster"
 Network = require "#{path}network"
 Logger = require "#{path}logger"
 WebRTC = require "#{path}webrtc/"
+User = require "#{path}user"
 
 chatAppServices = angular.module 'chatApp.services', []
 
-chatAppServices.service 'networkInterfaces', [Network]
+chatAppServices.service 'user', [User]
+chatAppServices.service 'networkInterfaces', ['user', Network]
 chatAppServices.service 'broadcaster', [
   '$rootScope'
+  'user'
   'networkInterfaces'
   Broadcaster
 ]

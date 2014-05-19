@@ -25,7 +25,9 @@ class WebRTC
     @connections[remote.address].channel.send msg
 
   connect: (remote) ->
-    return if @_connectionExists remote
+    if @_connectionExists remote
+      @$rootScope.$broadcast 'open', remote
+      return 
     @_connectByOffer remote
 
   close: (remote) ->
@@ -63,7 +65,7 @@ class WebRTC
 
   _registerChannelEvents: (con, channel, remote) ->
     channel.onmessage = (event) =>
-      @$rootScope.$broadcast 'newMessage', event.data, event, remote, channel, con
+      @$rootScope.$broadcast 'newRemoteMessage', event.data, event, remote, channel, con
 
     channel.onerror = (error) =>
       @$rootScope.$emit 'error', 'error by using the datachannel', error, remote, channel, con

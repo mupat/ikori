@@ -1,14 +1,27 @@
 class History
   histories: {}
-  constructor: ($scope) ->
-    $scope.history = []
-    $scope.$on 'newMessage', (scope, msg, event, remote) =>
+  constructor: (@$scope, user) ->
+    @$scope.history = []
+
+    @$scope.$on 'open', (scope, remote) =>
       @histories[remote.address] = [] unless @histories[remote.address]?
-      @histories[remote.address].push {
-        time: new Date()
-        msg: msg
-      }
-      $scope.$apply =>
-        $scope.history = @histories[remote.address]
+      @$scope.history = @histories[remote.address]
+
+    @$scope.$on 'close', =>
+      @$scope.history = []
+
+    @$scope.$on 'newRemoteMessage', (scope, msg, event, remote) =>
+      @$scope.$apply =>
+        @_add msg, remote.address, remote.address
+
+    $scope.$on 'newOwnMessage', (scope, msg, remote) =>
+      @_add msg, user.getInfos()['name'], remote.address
   
+  _add: (msg, origin, identifier) ->
+    @$scope.history.push {
+      time: new Date()
+      msg: msg
+      origin: origin
+    }
+
 module.exports = History

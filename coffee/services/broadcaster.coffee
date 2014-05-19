@@ -1,5 +1,4 @@
 dgram = require 'dgram'
-os = require 'os'
 
 class Broadcaster
   PORT: 4000
@@ -12,7 +11,7 @@ class Broadcaster
     ice: 'ice'
     close: 'close'
 
-  constructor: (@$rootScope, network) ->
+  constructor: (@$rootScope, @user, network) ->
     @networkInterfaces = network.interfaces
     @socket = dgram.createSocket 'udp4'
     # add msg routing
@@ -52,24 +51,18 @@ class Broadcaster
     @_send {type: @TYPES.offer, data: offer}, remote.port, remote.address
 
   sendBroadcastAnswer: (remote) ->
-    data = @_getUserInfos()
+    data = @user.getInfos()
     @_send {type: @TYPES.broadcastAnswer, data: data}, remote.port, remote.address
 
   sendPeerInformations: (remote) ->
-    data = @_getUserInfos()
+    data = @user.getInfos()
     @_send {type: @TYPES.peerInformations, data: data}, remote.port, remote.address
 
   sendBroadcast: (address) ->
-    data = @_getUserInfos
-    @_send {type: @TYPES.broadcast, data: data}, @PORT, address, true
+    @_send {type: @TYPES.broadcast}, @PORT, address, true
 
   sendClose: (remote) ->
     @_send {type: @TYPES.close}, remote.port, remote.address
-
-  _getUserInfos: ->
-    return {
-      name: os.hostname()
-    }
 
   _send: (msgJSON, port, address, broadcast = false) ->
     try

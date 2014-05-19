@@ -1,12 +1,10 @@
 Netmask = require('netmask').Netmask
-os = require 'os'
 
 class Network
   IP6: 'IPv6'
-  constructor: ->
-    @interfaces = @cleanup os.networkInterfaces()
+  constructor: (user) ->
+    @interfaces = @cleanup user.getNetworks()
     @addBroadcastAddress network for network in @interfaces
-    # @block = new Netmask(network.address, network.netmask);
 
   # add broadcast address to every network interface
   addBroadcastAddress: (network) ->
