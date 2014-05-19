@@ -18,11 +18,9 @@ class WebRTC
       @connections[remote.address].setRemoteDescription desc
 
     @$rootScope.$on 'remoteClose', (scope, remote) =>
-      # return unless @_connectionExists remote
       @_close remote
 
   connect: (remote) ->
-    console.log @connections, @connections[remote.address]
     return if @_connectionExists remote
     @_connectByOffer remote
 
@@ -36,7 +34,6 @@ class WebRTC
     con.channel.close()
     con.con.close()
     delete @connections[remote.address]
-    console.log 'after delete', @connections
 
   _connectionExists: (remote) ->
     con = @connections[remote.address]

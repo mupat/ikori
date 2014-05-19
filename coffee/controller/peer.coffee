@@ -17,11 +17,9 @@ class Peer
         $scope.peers[remote.address].open = false
 
     $scope.startConnection = (remote) ->
-      console.log 'start', remote
       webrtc.connect remote
 
     $scope.stopConnection = (remote) ->
-      console.log 'stop', remote
       webrtc.close remote
 
 module.exports = Peer
