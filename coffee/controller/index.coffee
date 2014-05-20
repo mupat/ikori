@@ -1,4 +1,4 @@
-path = "./js/controller/"
+path = "./public/js/controller/"
 Start = require "#{path}start"
 PeerCtrl = require "#{path}peer"
 MsgCtrl = require "#{path}msg"

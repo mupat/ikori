@@ -1,4 +1,4 @@
-path = "./js/services/"
+path = "./public/js/services/"
 Broadcaster = require "#{path}broadcaster"
 Network = require "#{path}network"
 Logger = require "#{path}logger"
