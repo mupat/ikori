@@ -1,37 +1,18 @@
 #binaries
 NODEWEBKIT_BIN = ./node_modules/.bin/nodewebkit
 BOWER_BIN =  ./node_modules/.bin/bower
-COFFEE_BIN = ./node_modules/.bin/coffee
-LESS_BIN = ./node_modules/.bin/lessc
-KCKR_BIN = ./node_modules/.bin/kckr
+GULP_BIN = ./node_modules/.bin/gulp
 
-#paths for public folder
-PUBLIC = public/
-PUBLIC_JS = $(PUBLIC)js
-PUBLIC_CSS = $(PUBLIC)css/style.css
+watch:
+	$(GULP_BIN) watch
 
-#paths for source files
-COFFEE = coffee/
-LESS = less/
+build:
+	$(GULP_BIN) build
 
-LESS_CMD = $(LESS_BIN) $(LESS)main.less > $(PUBLIC_CSS)
-
-watch: create
-	$(COFFEE_BIN) -cwo $(PUBLIC_JS) $(COFFEE) &
-	$(KCKR_BIN) -e "$(LESS_CMD)" less
-
-build: create
-	$(COFFEE_BIN) -co $(PUBLIC_JS) $(COFFEE)
-	$(LESS_CMD)
-
-install: create
+install:
 	npm install
 	$(BOWER_BIN) install
-
-create:
-	mkdir -p $(PUBLIC)
-	mkdir -p $(PUBLIC)/css
-	mkdir -p $(PUBLIC_JS)
+	$(GULP_BIN) build
 
 start:
 	$(NODEWEBKIT_BIN) .
