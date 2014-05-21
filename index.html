@@ -34,7 +34,7 @@
     <h4>History</h4>
     <ul>
       <li ng-repeat="line in history | orderBy:line.time">
-        [{{line.origin}}] [{{line.time}}] : {{line.msg}}
+        [<strong>{{line.origin}}</strong>] [{{line.time}}] : {{line.msg}}
       </li>
     </ul>
   </div>

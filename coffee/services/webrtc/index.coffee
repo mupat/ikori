@@ -3,7 +3,7 @@ Offerer = require './offerer'
 
 class WebRTC
   connections: {}
-  constructor: (@$rootScope, @broadcaster) ->
+  constructor: (@$rootScope, @network) ->
     @$rootScope.$on 'offer', (scope, remote, offer) =>
       return if @_connectionExists remote
       @_connectByAnswer remote, offer
@@ -17,8 +17,8 @@ class WebRTC
       return if @_connectionExists remote
       @connections[remote.address].setRemoteDescription desc
 
-    @$rootScope.$on 'remoteClose', (scope, remote) =>
-      @_close remote
+    @$rootScope.$on 'remoteClose', (scope, address) =>
+      @_close address
 
   send: (remote, msg) ->
     return unless @_connectionExists remote
@@ -31,15 +31,15 @@ class WebRTC
     @_connectByOffer remote
 
   close: (remote) ->
-    @_close remote
-    @broadcaster.sendClose remote
-    
-  _close: (remote) ->
-    con = @connections[remote.address]
+    @_close remote.address
+    @network.send 'close', remote
+        
+  _close: (address) ->
+    con = @connections[address]
     return unless con?
     con.channel.close()
     con.con.close()
-    delete @connections[remote.address]
+    delete @connections[address]
 
   _connectionExists: (remote) ->
     con = @connections[remote.address]
@@ -50,7 +50,7 @@ class WebRTC
     answerer.on 'ice', @_sendICE.bind(@, answerer)
     answerer.on 'datachannel', @_registerChannelEvents.bind(@, answerer)
     answerer.on 'answer', (desc, remote) =>
-      @broadcaster.sendAnswer desc, remote
+      @network.send 'answer', remote, desc
 
     @connections[remote.address] = answerer
 
@@ -59,7 +59,7 @@ class WebRTC
     offerer.on 'ice', @_sendICE.bind(@, offerer)
     @_registerChannelEvents offerer, offerer.channel, offerer.remote
     offerer.on 'offer', (desc, remote) =>
-      @broadcaster.sendOffer desc, remote
+      @network.send 'offer', remote, desc
 
     @connections[remote.address] = offerer
 
@@ -77,6 +77,6 @@ class WebRTC
       @$rootScope.$broadcast 'close', remote, channel, con
 
   _sendICE: (con, candidate, remote) ->
-    @broadcaster.sendICE candidate, remote unless con.signalingState is 'stable'
+    @network.send 'ice', remote, candidate unless con.signalingState is 'stable'
 
 module.exports = WebRTC

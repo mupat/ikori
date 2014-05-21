@@ -1,7 +1,6 @@
 class Start
-  constructor: ($rootScope, broadcaster) ->
+  constructor: (network) ->
     # start the broadcast
-    broadcaster.sendBroadcasts()
-    $rootScope.$broadcast 'started'
+    network.start()
 
 module.exports = Start

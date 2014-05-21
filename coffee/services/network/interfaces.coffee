@@ -1,18 +1,21 @@
 Netmask = require('netmask').Netmask
 
-class Network
+class Interfaces
   IP6: 'IPv6'
-  constructor: (user) ->
-    @interfaces = @cleanup user.getNetworks()
-    @addBroadcastAddress network for network in @interfaces
+  constructor: (networks) ->
+    @interfaces = @_cleanup networks
+    @_addBroadcastAddress network for network in @interfaces
+
+  get: ->
+    return @interfaces
 
   # add broadcast address to every network interface
-  addBroadcastAddress: (network) ->
+  _addBroadcastAddress: (network) ->
     block = new Netmask network.address, network.netmask
     network.broadcast = block.broadcast
 
   # remove not used network interfaces, like internal and IPv6
-  cleanup: (networkInterfaces) ->
+  _cleanup: (networkInterfaces) ->
     usableNetworks = []
     for name, networks of networkInterfaces
       for network in networks
@@ -25,4 +28,4 @@ class Network
 
     return usableNetworks
 
-module.exports = Network
+module.exports = Interfaces
