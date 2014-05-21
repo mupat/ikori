@@ -1,15 +1,11 @@
-fs = require 'fs'
-
 class Config
   constructor: ->
     @config = 
       port: 4000
       interval: 1000 #milliseconds
+      logging: false
 
-  getPort: ->
-    return @config.port
-
-  getInterval: ->
-    return @config.interval
+  get: (key) ->
+    return @config[key]
   
 module.exports = Config

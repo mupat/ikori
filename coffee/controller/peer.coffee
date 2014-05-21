@@ -1,12 +1,16 @@
 class Peer
-  constructor: ($scope, broadcaster, webrtc) ->
+  constructor: ($scope, webrtc) ->
     $scope.peers = {}
-    $scope.$on 'newPeer', (scope, remote, data) ->
+    $scope.$on 'newPeer', (scope, remote, infos) ->
       $scope.$apply ->
         $scope.peers[remote.address] = 
           remote: remote
-          infos: data
+          infos: infos
           open: false
+
+    $scope.$on 'removePeer', (scope, address) ->
+      $scope.$apply ->
+        delete $scope.peers[address]
 
     $scope.$on 'open', (scope, remote, channel, con) ->
       $scope.$apply ->
@@ -14,7 +18,7 @@ class Peer
 
     $scope.$on 'close', (scope, remote, channel, con) ->
       $scope.$apply ->
-        $scope.peers[remote.address].open = false
+        $scope.peers[remote.address].open = false if $scope.peers[remote.address]?
 
     $scope.startConnection = (remote) ->
       webrtc.connect remote

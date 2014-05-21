@@ -9,7 +9,6 @@ chatAppControllers = angular.module 'chatApp.controllers', []
 
 chatAppControllers.controller 'PeerCtrl', [
   '$scope'
-  'broadcaster'
   'webrtc'
   PeerCtrl
 ]
@@ -22,6 +21,7 @@ chatAppControllers.controller 'MsgCtrl', [
 chatAppControllers.controller 'HistoryCtrl', [
   '$scope'
   'user'
+  'network'
   HistoryCtrl
 ]
 chatAppControllers.controller 'UserCtrl', [
@@ -30,4 +30,4 @@ chatAppControllers.controller 'UserCtrl', [
   UserCtrl
 ]
 
-chatAppControllers.run ['$rootScope', 'broadcaster', Start]
+chatAppControllers.run ['network', Start]

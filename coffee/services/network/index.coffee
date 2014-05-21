@@ -1,84 +1,57 @@
-dgram = require 'dgram'
+Socket = require './socket'
+Interfaces = require './interfaces'
+Broadcaster = require './broadcaster'
 
-class Broadcaster
-  PORT: 4000
-  TYPES:
-    broadcast: 'broadcast'
-    broadcastAnswer: 'broadcast_answer'
-    peerInformations: 'peer_infos'
-    offer: 'offer'
-    answer: 'answer'
-    ice: 'ice'
-    close: 'close'
+class Network
+  constructor: (@$rootScope, config, user) ->
+    interfaces = new Interfaces user.getNetworks()
+    @socket = new Socket config.get('port')
+    @broadcaster = new Broadcaster @socket, interfaces.get(), user, config.get('interval')
 
-  constructor: (@$rootScope, @user, network) ->
-    @networkInterfaces = network.interfaces
-    @socket = dgram.createSocket 'udp4'
-    # add msg routing
-    @socket.on 'message', (msg, remote) =>
-      try
-        msgJSON = JSON.parse msg
-      catch e
-        return @$rootScope.$emit 'error', 'got message that isnt a json string', msg.toString(), remote
+    #register error event
+    @socket.on 'error', (args...) =>
+      @$rootScope.$emit 'error', 'error in socket class', args
 
-      return if @_isOwnRemote remote #ignore own messages
+    @_registerSocketEvents()
+    @_registerPeerEvents()
+    @_registerLogEvents() if config.get('logging')
 
-      @$rootScope.$broadcast 'received', remote, msg.toString()
-      switch msgJSON.type
-        when @TYPES.broadcast then @sendBroadcastAnswer remote
-        when @TYPES.broadcastAnswer then @sendPeerInformations(remote); @$rootScope.$broadcast('newPeer', remote, msgJSON.data);
-        when @TYPES.peerInformations then @$rootScope.$broadcast 'newPeer', remote, msgJSON.data
-        when @TYPES.offer then @$rootScope.$broadcast 'offer', remote, msgJSON.data
-        when @TYPES.answer then @$rootScope.$broadcast 'answer', remote, msgJSON.data
-        when @TYPES.ice then @$rootScope.$broadcast 'ice', remote, msgJSON.data
-        when @TYPES.close then @$rootScope.$broadcast 'remoteClose', remote
-        else @$rootScope.$emit 'error', 'got message with undefined type', msgJSON, remote
+  start: ->
+    @socket.on 'ready', =>
+      @$rootScope.$emit 'started'
+    @socket.start()
+  
+  send: (type, remote, data = null)->
+    return unless @socket.TYPES_WEBRTC[type]? #return if type isnt provided
+    msg = 
+      type: @socket.TYPES_WEBRTC[type]
 
-  sendBroadcasts: ->
-    @socket.on 'listening', =>
-      for network in @networkInterfaces
-        @sendBroadcast network.broadcast
+    msg.data = data if data?
+    @socket.send msg, remote.address, remote.port
 
-    @socket.bind @PORT
+  getPeerInfos: (address) ->
+    return @broadcaster.getPeerInfos address
 
-  sendICE: (ice, remote) ->
-    @_send {type: @TYPES.ice, data: ice}, remote.port, remote.address
+  _registerPeerEvents: ->
+    @broadcaster.on 'newPeer', (remote, infos) =>
+      @$rootScope.$broadcast 'newPeer', remote, infos
 
-  sendAnswer: (answer, remote) ->
-    @_send {type: @TYPES.answer, data: answer}, remote.port, remote.address
+    @broadcaster.on 'removePeer', (address) =>
+      @$rootScope.$broadcast 'remoteClose', address
+      @$rootScope.$broadcast 'removePeer', address
 
-  sendOffer: (offer, remote) ->
-    @_send {type: @TYPES.offer, data: offer}, remote.port, remote.address
+  _registerSocketEvents: ->
+    #re-emit the socket events to angular world
+    for type of @socket.TYPES_WEBRTC
+      do (type) =>
+        @socket.on type, (msg, remote) =>
+          @$rootScope.$broadcast type, remote, msg.data
 
-  sendBroadcastAnswer: (remote) ->
-    data = @user.getInfos()
-    @_send {type: @TYPES.broadcastAnswer, data: data}, remote.port, remote.address
+  _registerLogEvents: ->
+    @socket.on 'received', (args...) =>
+      @$rootScope.$emit 'received', args...
 
-  sendPeerInformations: (remote) ->
-    data = @user.getInfos()
-    @_send {type: @TYPES.peerInformations, data: data}, remote.port, remote.address
+    @socket.on 'sent', (args...) =>
+      @$rootScope.$emit 'sent', args...
 
-  sendBroadcast: (address) ->
-    @_send {type: @TYPES.broadcast}, @PORT, address, true
-
-  sendClose: (remote) ->
-    @_send {type: @TYPES.close}, remote.port, remote.address
-
-  _send: (msgJSON, port, address, broadcast = false) ->
-    try
-      msgStr = JSON.stringify msgJSON
-    catch e
-      return @$rootScope.$emit 'error', 'msg json is not valid', e
-
-    msg = new Buffer msgStr
-    @socket.setBroadcast broadcast
-    @socket.send msg, 0, msg.length, port, address, (err, bytes) =>
-      return @$rootScope.$emit 'error' if err
-      @$rootScope.$emit 'sent', msgStr
-
-  _isOwnRemote: (remote) ->
-    for network in @networkInterfaces
-      return true if remote.address is network.address
-    return false
-
-module.exports = Broadcaster
+module.exports = Network

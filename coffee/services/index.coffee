@@ -1,23 +1,23 @@
 path = "./public/js/services/"
-Broadcaster = require "#{path}broadcaster"
 Network = require "#{path}network"
 Logger = require "#{path}logger"
 WebRTC = require "#{path}webrtc/"
 User = require "#{path}user"
+Config = require "#{path}config"
 
 chatAppServices = angular.module 'chatApp.services', []
 
 chatAppServices.service 'user', [User]
-chatAppServices.service 'networkInterfaces', ['user', Network]
-chatAppServices.service 'broadcaster', [
+chatAppServices.service 'config', [Config]
+chatAppServices.service 'network', [
   '$rootScope'
+  'config'
   'user'
-  'networkInterfaces'
-  Broadcaster
+  Network
 ]
 chatAppServices.service 'webrtc', [
   '$rootScope'
-  'broadcaster'
+  'network'
   WebRTC
 ]
 

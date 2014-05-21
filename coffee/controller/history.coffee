@@ -1,6 +1,6 @@
 class History
   histories: {}
-  constructor: (@$scope, user) ->
+  constructor: (@$scope, user, network) ->
     @$scope.history = []
 
     @$scope.$on 'open', (scope, remote) =>
@@ -12,7 +12,7 @@ class History
 
     @$scope.$on 'newRemoteMessage', (scope, msg, event, remote) =>
       @$scope.$apply =>
-        @_add msg, remote.address, remote.address
+        @_add msg, network.getPeerInfos(remote.address)['name'], remote.address
 
     $scope.$on 'newOwnMessage', (scope, msg, remote) =>
       @_add msg, user.getInfos()['name'], remote.address
