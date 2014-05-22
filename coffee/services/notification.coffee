@@ -1,6 +1,9 @@
 Window = global.window.nwDispatcher.requireNwGui()['Window']
 screen = window.screen
 
+os = require 'os'
+displayNotification = require 'display-notification'
+
 class Notification
   TEMPLATE: 'app://local/notification.html' #template, relative to the root path
   OPTIONS: # options for the new window
@@ -34,13 +37,16 @@ class Notification
     console.log 'new notif', @focus
     return if @focus # return if the chat has focus from the user
 
-    #create new window
-    notification = Window.open @TEMPLATE, @OPTIONS
-    index = Object.keys(@notifications).length + 1
-    @notifications[index] = notification
+    if os.platform() is 'darwin'
+      displayNotification {title: origin, subtitle: text}
+    else
+      #create new window
+      notification = Window.open @TEMPLATE, @OPTIONS
+      index = Object.keys(@notifications).length + 1
+      @notifications[index] = notification
 
-    notification.on 'loaded', @_newWindowLoaded.bind(@, index, origin, text)
-    notification.once 'focus', @_newWindowFocus.bind(@, index)
+      notification.on 'loaded', @_newWindowLoaded.bind(@, index, origin, text)
+      notification.once 'focus', @_newWindowFocus.bind(@, index)
 
   _closeAllNotifications: ->
     for index, notification of @notifications
