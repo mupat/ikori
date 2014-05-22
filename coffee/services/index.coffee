@@ -4,11 +4,16 @@ Logger = require "#{path}logger"
 WebRTC = require "#{path}webrtc/"
 User = require "#{path}user"
 Config = require "#{path}config"
+Notification = require "#{path}notification"
 
 chatAppServices = angular.module 'chatApp.services', []
 
 chatAppServices.service 'user', [User]
 chatAppServices.service 'config', [Config]
+chatAppServices.service 'notification', [
+  '$rootScope'
+  Notification
+]
 chatAppServices.service 'network', [
   '$rootScope'
   'config'

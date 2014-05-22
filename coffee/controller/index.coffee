@@ -30,4 +30,4 @@ chatAppControllers.controller 'UserCtrl', [
   UserCtrl
 ]
 
-chatAppControllers.run ['network', Start]
+chatAppControllers.run ['network', 'notification', Start]

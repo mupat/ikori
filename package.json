@@ -27,6 +27,7 @@
   "window": {
     "title": "node_chat",
     "toolbar": true,
-    "position": "center"
+    "position": "center",
+    "focus": true
   }
 }
