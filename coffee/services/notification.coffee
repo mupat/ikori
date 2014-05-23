@@ -2,9 +2,11 @@ Window = global.window.nwDispatcher.requireNwGui()['Window']
 screen = window.screen
 
 os = require 'os'
-displayNotification = require 'display-notification'
+notify = require 'node-notify'
 
 class Notification
+  MARGIN: 25 #margin to top and right
+  GROUP_ID: 'chat' #group id for notifications on mac
   TEMPLATE: 'app://local/notification.html' #template, relative to the root path
   OPTIONS: # options for the new window
     frame: false
@@ -17,7 +19,7 @@ class Notification
     focus: false
 
   focus: true  #hold if the main window has focus or not
-  notifications: {} #hold the open windows
+  notification: null
 
   constructor: ($rootScope) ->
     @main = Window.get()
@@ -30,54 +32,56 @@ class Notification
       @focus = true
 
     @main.on 'close', =>
-      @_closeAllNotifications()
+      @_removeNotification()
       @main.close true
+
+    #register for new remote messages
+    $rootScope.$on 'newRemoteMessage', (scope, msg, event, remote) =>
+      @new remote.address, msg
 
   new: (origin, text) ->
     console.log 'new notif', @focus
     return if @focus # return if the chat has focus from the user
 
-    if os.platform() is 'darwin'
-      displayNotification {title: origin, subtitle: text}
+    if os.platform() is 'darwin' #show other notification on mac
+      notify {title: origin, msg: text, group: @GROUP_ID, sender: 'com.mupat.nodechat'}
     else
+      #check if a notification is open
+      @_removeNotification() if @notification?
+
       #create new window
-      notification = Window.open @TEMPLATE, @OPTIONS
-      index = Object.keys(@notifications).length + 1
-      @notifications[index] = notification
+      @notification = Window.open @TEMPLATE, @OPTIONS
+      @notification.on 'loaded', @_onLoad.bind(@, origin, text)
+      @notification.once 'focus', @_onFocus.bind(@)
 
-      notification.on 'loaded', @_newWindowLoaded.bind(@, index, origin, text)
-      notification.once 'focus', @_newWindowFocus.bind(@, index)
+  _removeNotification: ->
+    if os.platform() is 'darwin'
+      notify remove: @GROUP_ID
+    else 
+      @notification.close()
+      @notification = null
 
-  _closeAllNotifications: ->
-    for index, notification of @notifications
-      notification.close()
-      delete @notifications[index]
-
-  _newWindowFocus: (index) ->
-    notification = @notifications[index]
-    @_closeAllNotifications()
-
+  _onFocus: ->
+    @_removeNotification()
     @main.focus()
 
-  _newWindowLoaded: (index, origin, text) ->
-    notification = @notifications[index]
-    dom = notification.window.document # get dom from new window
+  _onLoad: (origin, text) ->
+    dom = @notification.window.document # get dom from new window
 
     # set origin and text
     dom.getElementById('origin').innerHTML = origin
     dom.getElementById('text').innerHTML = text
 
-    #move element to upper right corner
+    #move notification to upper right corner
     pos = @_calcPosition()
-    notification.moveTo pos.x, pos.y
-    notification.show() #finally show the new window
+    @notification.moveTo pos.x, pos.y
+    @notification.show() #finally show the new window
+    setTimeout @_removeNotification.bind(@), 1000
 
   _calcPosition: ->
-    openCount = Object.keys(@notifications).length
-
     return {
-      x: (screen.availLeft + screen.availWidth) - @OPTIONS.width - 25
-      y: (screen.availTop * openCount) + (openCount * @OPTIONS.height) + 25
+      x: (screen.availLeft + screen.availWidth) - @OPTIONS.width - @MARGIN
+      y: screen.availTop + @MARGIN
     }
 
 module.exports = Notification

@@ -7,8 +7,8 @@
   "repository": "https://github.com/mupat/node_chat",
   "license": "MIT",
   "dependencies": {
-    "display-notification": "^0.1.0",
     "netmask": "1.0.4",
+    "node-notify": "0.0.2",
     "nodewebkit": "0.9.2-5"
   },
   "devDependencies": {
