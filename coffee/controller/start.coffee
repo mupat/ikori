@@ -3,9 +3,9 @@ class Start
     # start the broadcast
     network.start()
 
-    show = ->
-      notification.new('test', 'test test test ')
+    # show = ->
+    #   notification.new('test', 'test test test ')
 
-    setInterval(show, 3000)
+    # setInterval(show, 3000)
 
 module.exports = Start
