@@ -3,18 +3,17 @@ Interfaces = require './interfaces'
 Broadcaster = require './broadcaster'
 
 class Network
-  constructor: (@$rootScope, config, user) ->
-    interfaces = new Interfaces user.getNetworks()
-    @socket = new Socket config.get('port')
-    @broadcaster = new Broadcaster @socket, interfaces.get(), user, config.get('interval')
+  constructor: (@$rootScope, config, @user, peer) ->
+    interfaces = new Interfaces @user.interfaces
+    @socket = new Socket config.port
+    @broadcaster = new Broadcaster @socket, interfaces.get(), @user, config, peer
 
     #register error event
     @socket.on 'error', (args...) =>
       @$rootScope.$emit 'error', 'error in socket class', args
 
     @_registerSocketEvents()
-    @_registerPeerEvents()
-    @_registerLogEvents() if config.get('logging')
+    @_registerLogEvents() if config.logging
 
   start: ->
     @socket.on 'ready', =>
@@ -25,33 +24,24 @@ class Network
     return unless @socket.TYPES_WEBRTC[type]? #return if type isnt provided
     msg = 
       type: @socket.TYPES_WEBRTC[type]
+      uuid: @user.uuid
 
-    msg.data = data if data?
+    msg.data = data if data? # add data object if provided
     @socket.send msg, remote.address, remote.port
-
-  getPeerInfos: (address) ->
-    return @broadcaster.getPeerInfos address
-
-  _registerPeerEvents: ->
-    @broadcaster.on 'newPeer', (remote, infos) =>
-      @$rootScope.$broadcast 'newPeer', remote, infos
-
-    @broadcaster.on 'removePeer', (address) =>
-      @$rootScope.$broadcast 'remoteClose', address
-      @$rootScope.$broadcast 'removePeer', address
 
   _registerSocketEvents: ->
     #re-emit the socket events to angular world
     for type of @socket.TYPES_WEBRTC
       do (type) =>
         @socket.on type, (msg, remote) =>
+          remote.uuid = msg.uuid
           @$rootScope.$broadcast type, remote, msg.data
 
   _registerLogEvents: ->
     @socket.on 'received', (args...) =>
-      @$rootScope.$emit 'received', args...
+      @$rootScope.$emit 'socket.received', args...
 
     @socket.on 'sent', (args...) =>
-      @$rootScope.$emit 'sent', args...
+      @$rootScope.$emit 'socket.sent', args...
 
 module.exports = Network

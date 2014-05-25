@@ -1,29 +1,47 @@
 class Peer
-  constructor: ($scope, webrtc) ->
+  constructor: ($rootScope, $scope, webrtc, peers) ->
     $scope.peers = {}
-    $scope.$on 'newPeer', (scope, remote, infos) ->
+
+    $scope.$on 'peer.new', (scope, infos) ->
       $scope.$apply ->
-        $scope.peers[remote.address] = 
-          remote: remote
-          infos: infos
-          open: false
+        infos.open = false
+        $scope.peers[infos.uuid] = infos
 
-    $scope.$on 'removePeer', (scope, address) ->
+    $scope.$on 'peer.remove', (scope, infos) ->
       $scope.$apply ->
-        delete $scope.peers[address]
+        delete $scope.peers[infos.uuid]
 
-    $scope.$on 'open', (scope, remote, channel, con) ->
+    $scope.$on 'channel.open', (scope, uuid) ->
       $scope.$apply ->
-        $scope.peers[remote.address].open = true
+        $scope.peers[uuid].open = true
 
-    $scope.$on 'close', (scope, remote, channel, con) ->
+    $scope.$on 'channel.close', (scope, uuid) ->
       $scope.$apply ->
-        $scope.peers[remote.address].open = false if $scope.peers[remote.address]?
+        $scope.peers[uuid].open = false
 
-    $scope.startConnection = (remote) ->
-      webrtc.connect remote
 
-    $scope.stopConnection = (remote) ->
-      webrtc.close remote
+    # $scope.peers = peer.getAll()
+    # $scope.$on 'newPeer', (scope, uuid) ->
+    #   # $scope.$apply ->
+    #   $scope.peers[uuid] = peer.get(uuid)
+
+    # $scope.$on 'removePeer', (scope, uuid) ->
+    #   # $scope.$apply ->
+    #   delete $scope.peers[uuid]
+
+    # $scope.$on 'open', (scope, remote, channel, con) ->
+    #   $scope.$apply ->
+    #     $scope.peers[remote.address].open = true
+
+    # $scope.$on 'close', (scope, remote, channel, con) ->
+    #   $scope.$apply ->
+    #     $scope.peers[remote.address].open = false if $scope.peers[remote.address]?
+
+    $scope.startConnection = (uuid) ->
+      # $rootScope.$broadcast 'peer.select', uuid
+      webrtc.connect uuid
+
+    # $scope.stopConnection = (uuid) ->
+    #   webrtc.close uuid
 
 module.exports = Peer

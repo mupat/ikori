@@ -1,28 +1,35 @@
 path = "./public/js/services/"
-Network = require "#{path}network"
+Network = require "#{path}network/"
 Logger = require "#{path}logger"
 WebRTC = require "#{path}webrtc/"
-User = require "#{path}user"
-Config = require "#{path}config"
 Notification = require "#{path}notification"
+Peer = require "#{path}peer"
 
 chatAppServices = angular.module 'chatApp.services', []
 
-chatAppServices.service 'user', [User]
-chatAppServices.service 'config', [Config]
+chatAppServices.service 'peer', [
+  '$rootScope'
+  'CONFIG'
+  Peer
+]
+
 chatAppServices.service 'notification', [
   '$rootScope'
+  'USER'
+  'CONFIG'
   Notification
 ]
 chatAppServices.service 'network', [
   '$rootScope'
-  'config'
-  'user'
+  'CONFIG'
+  'USER'
+  'peer'
   Network
 ]
 chatAppServices.service 'webrtc', [
   '$rootScope'
   'network'
+  'peer'
   WebRTC
 ]
 

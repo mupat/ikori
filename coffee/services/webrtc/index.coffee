@@ -2,79 +2,75 @@ Answerer = require './answerer'
 Offerer = require './offerer'
 
 class WebRTC
-  connections: {}
-  constructor: (@$rootScope, @network) ->
+  constructor: (@$rootScope, @network, @peer) ->
     @$rootScope.$on 'offer', (scope, remote, offer) =>
-      return if @_connectionExists remote
+      return if @peer.hasConnection(remote.uuid)
       @_connectByAnswer remote, offer
 
     @$rootScope.$on 'ice', (scope, remote, ice) =>
-      return if @_connectionExists remote
-      return @$rootScope.$emit 'error', 'no connection for ice candidate', remote, ice unless @connections[remote.address]?
-      @connections[remote.address].setICE ice
+      return if @peer.hasConnection(remote.uuid)
+      @peer.getConnection(remote.uuid).setICE ice
 
     @$rootScope.$on 'answer', (scope, remote, desc) =>
-      return if @_connectionExists remote
-      @connections[remote.address].setRemoteDescription desc
+      return if @peer.hasConnection(remote.uuid)
+      @peer.getConnection(remote.uuid).setRemoteDescription desc
 
-    @$rootScope.$on 'remoteClose', (scope, address) =>
-      @_close address
+    @$rootScope.$on 'peer.remove', (scope, infos) =>
+      @_close infos.uuid
 
-  send: (remote, msg) ->
-    return unless @_connectionExists remote
-    @connections[remote.address].channel.send msg
+    @$rootScope.$on 'message.own', (scope, msg, uuid) =>
+      console.log 'send'
+      @send uuid, msg
 
-  connect: (remote) ->
-    if @_connectionExists remote
-      @$rootScope.$broadcast 'open', remote
-      return 
-    @_connectByOffer remote
+  send: (uuid, msg) ->
+    return unless @peer.hasConnection(uuid)
+    console.log 'send 2'
+    @peer.getConnection(uuid).send msg
 
-  close: (remote) ->
-    @_close remote.address
-    @network.send 'close', remote
-        
-  _close: (address) ->
-    con = @connections[address]
+  connect: (uuid) ->
+    if @peer.hasConnection(uuid)
+      return
+
+    @_connectByOffer @peer.getRemote(uuid)
+
+  _close: (uuid) ->
+    con = @peer.getConnection uuid
     return unless con?
     con.channel.close()
     con.con.close()
-    delete @connections[address]
-
-  _connectionExists: (remote) ->
-    con = @connections[remote.address]
-    return con?.channel?.readyState is 'open'
 
   _connectByAnswer: (remote, offer) ->
     answerer = new Answerer remote, offer
     answerer.on 'ice', @_sendICE.bind(@, answerer)
-    answerer.on 'datachannel', @_registerChannelEvents.bind(@, answerer)
+    answerer.on 'datachannel', @_registerChannelEvents.bind(@)
     answerer.on 'answer', (desc, remote) =>
       @network.send 'answer', remote, desc
 
-    @connections[remote.address] = answerer
+    @peer.setConnection remote.uuid, answerer
 
   _connectByOffer: (remote) ->
     offerer = new Offerer remote
     offerer.on 'ice', @_sendICE.bind(@, offerer)
-    @_registerChannelEvents offerer, offerer.channel, offerer.remote
+    @_registerChannelEvents offerer.channel, remote.uuid
     offerer.on 'offer', (desc, remote) =>
       @network.send 'offer', remote, desc
 
-    @connections[remote.address] = offerer
+    @peer.setConnection remote.uuid, offerer
 
-  _registerChannelEvents: (con, channel, remote) ->
+  _registerChannelEvents: (channel, uuid) ->
+    console.log 'add channel events', channel
     channel.onmessage = (event) =>
-      @$rootScope.$broadcast 'newRemoteMessage', event.data, event, remote, channel, con
+      console.log 'remote message', event.data
+      @$rootScope.$broadcast 'message.peer', event.data, uuid
 
     channel.onerror = (error) =>
-      @$rootScope.$emit 'error', 'error by using the datachannel', error, remote, channel, con
+      @$rootScope.$emit 'error', 'error by using the datachannel', error, uuid
 
     channel.onopen = =>
-      @$rootScope.$broadcast 'open', remote, channel, con
+      @$rootScope.$broadcast 'channel.open', uuid
 
     channel.onclose = =>
-      @$rootScope.$broadcast 'close', remote, channel, con
+      @$rootScope.$broadcast 'channel.close', uuid
 
   _sendICE: (con, candidate, remote) ->
     @network.send 'ice', remote, candidate unless con.signalingState is 'stable'

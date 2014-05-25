@@ -17,10 +17,14 @@ class Connection extends EventEmitter
       sdpMLineIndex: msg.sdpMLineIndex,
       candidate: msg.candidate
       
-    @con.addIceCandidate new window.RTCIceCandidate candidate
+    @con.addIceCandidate new window.RTCIceCandidate(candidate)
 
   setRemoteDescription: (msg) ->
-    @con.setRemoteDescription new window.RTCSessionDescription msg
+    console.log 'setRemoteDescription', msg
+    @con.setRemoteDescription new window.RTCSessionDescription(msg)
+
+  send: (msg) ->
+    @channel.send msg
 
   _gotCandidate: (event) =>
     @emit 'ice', event.candidate, @remote if event.candidate

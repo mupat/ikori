@@ -1,27 +1,19 @@
 class History
-  histories: {}
-  constructor: (@$scope, user, network) ->
-    @$scope.history = []
+  peer: null
+  constructor: ($scope, peers) ->
+    $scope.history = []
+    $scope.$on 'channel.open', (scope, uuid) =>
+      @peer = uuid
+      $scope.$apply ->
+        $scope.history = peers.getHistory uuid
 
-    @$scope.$on 'open', (scope, remote) =>
-      @histories[remote.address] = [] unless @histories[remote.address]?
-      @$scope.history = @histories[remote.address]
+    $scope.$on 'peer.message', (scope, entry) =>
+      $scope.$apply ->
+        $scope.history.push entry
 
-    @$scope.$on 'close', =>
-      @$scope.history = []
-
-    @$scope.$on 'newRemoteMessage', (scope, msg, event, remote) =>
-      @$scope.$apply =>
-        @_add msg, network.getPeerInfos(remote.address)['name'], remote.address
-
-    $scope.$on 'newOwnMessage', (scope, msg, remote) =>
-      @_add msg, user.getInfos()['name'], remote.address
-  
-  _add: (msg, origin, identifier) ->
-    @histories[identifier].push {
-      time: new Date()
-      msg: msg
-      origin: origin
-    }
+    $scope.$on 'peer.remove', (scope, uuid) =>
+      if @peer is uuid
+        @peer = null
+        $scope.history = []
 
 module.exports = History

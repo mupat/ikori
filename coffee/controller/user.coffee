@@ -1,5 +1,5 @@
 class User
   constructor: ($scope, user) ->
-    $scope.name = user.getInfos()['name']
+    $scope.name = user.name
   
 module.exports = User

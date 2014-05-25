@@ -1,7 +1,7 @@
 class Start
   constructor: (network, notification) ->
-    # start the broadcast
-    network.start()
+    global.window.nwDispatcher.requireNwGui()['Window'].get().show() # show window
+    network.start() # start the network broadcaster
 
     # show = ->
     #   notification.new('test', 'test test test ')
