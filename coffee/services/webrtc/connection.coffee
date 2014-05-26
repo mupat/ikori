@@ -20,7 +20,6 @@ class Connection extends EventEmitter
     @con.addIceCandidate new window.RTCIceCandidate(candidate)
 
   setRemoteDescription: (msg) ->
-    console.log 'setRemoteDescription', msg
     @con.setRemoteDescription new window.RTCSessionDescription(msg)
 
   send: (msg) ->

@@ -17,31 +17,9 @@ class Peer
 
     $scope.$on 'channel.close', (scope, uuid) ->
       $scope.$apply ->
-        $scope.peers[uuid].open = false
-
-
-    # $scope.peers = peer.getAll()
-    # $scope.$on 'newPeer', (scope, uuid) ->
-    #   # $scope.$apply ->
-    #   $scope.peers[uuid] = peer.get(uuid)
-
-    # $scope.$on 'removePeer', (scope, uuid) ->
-    #   # $scope.$apply ->
-    #   delete $scope.peers[uuid]
-
-    # $scope.$on 'open', (scope, remote, channel, con) ->
-    #   $scope.$apply ->
-    #     $scope.peers[remote.address].open = true
-
-    # $scope.$on 'close', (scope, remote, channel, con) ->
-    #   $scope.$apply ->
-    #     $scope.peers[remote.address].open = false if $scope.peers[remote.address]?
+        $scope.peers[uuid].open = false if $scope.peers[uuid]?
 
     $scope.startConnection = (uuid) ->
-      # $rootScope.$broadcast 'peer.select', uuid
       webrtc.connect uuid
-
-    # $scope.stopConnection = (uuid) ->
-    #   webrtc.close uuid
 
 module.exports = Peer

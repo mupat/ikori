@@ -9,7 +9,6 @@ class Answerer extends Connection
 
     @con.ondatachannel = (event) =>
       @channel = event.channel
-      console.log 'ondatachannel', @channel, @remote
       @emit 'datachannel', @channel, @remote.uuid
 
   _sendAnswer: (desc) =>

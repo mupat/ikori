@@ -19,16 +19,15 @@ class WebRTC
       @_close infos.uuid
 
     @$rootScope.$on 'message.own', (scope, msg, uuid) =>
-      console.log 'send'
       @send uuid, msg
 
   send: (uuid, msg) ->
     return unless @peer.hasConnection(uuid)
-    console.log 'send 2'
     @peer.getConnection(uuid).send msg
 
   connect: (uuid) ->
     if @peer.hasConnection(uuid)
+      @$rootScope.$broadcast 'channel.open', uuid #emit open event, as it is already open
       return
 
     @_connectByOffer @peer.getRemote(uuid)
@@ -58,9 +57,7 @@ class WebRTC
     @peer.setConnection remote.uuid, offerer
 
   _registerChannelEvents: (channel, uuid) ->
-    console.log 'add channel events', channel
     channel.onmessage = (event) =>
-      console.log 'remote message', event.data
       @$rootScope.$broadcast 'message.peer', event.data, uuid
 
     channel.onerror = (error) =>

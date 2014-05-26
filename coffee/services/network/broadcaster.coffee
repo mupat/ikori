@@ -4,7 +4,7 @@ class Broadcaster extends EventEmitter
   constructor: (@socket, @interfaces, @user, @config, @peer) ->
     @socket.on 'ready', =>
       @_sendBroadcasts() #send initial broadcast
-      # setInterval @_sendBroadcasts.bind(@), @config.broadcastInterval #send broadcast in given interval
+      setInterval @_sendBroadcasts.bind(@), @config.broadcastInterval #send broadcast in given interval
 
     @socket.on @socket.TYPES_NETWORK.broadcast, (msg, remote) =>
       return if @_isYourself remote.address #ignore own messages

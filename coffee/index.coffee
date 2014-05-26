@@ -33,7 +33,7 @@ getConfig = (cb) ->
       port: configFile.port || 4000
       broadcastInterval: configFile.broadcastInterval || 1000 
       notificationInterval: configFile.notificationInterval || 1000
-      logging: configFile.logging || true
+      logging: false
 
     cb null, config
 
@@ -52,5 +52,9 @@ async.series {
   ]
   chatApp.constant 'USER', results.user
   chatApp.constant 'CONFIG', results.config
+  chatApp.factory '$exceptionHandler', ->
+    return (exception, cause) ->
+      console.log 'error', exception.message, exception.stack
+      console.log 'cause', cause
   
   angular.bootstrap document, ['chatApp']
