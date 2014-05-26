@@ -39,4 +39,10 @@ class User
       else
         $scope.editable[key].value = @oldValue
 
+    $scope.video = false
+    $scope.$on 'message.stream', (scope, stream) ->
+      console.log 'render stream'
+      $scope.video = true
+      window.angular.element('#video').src = window.URL.createObjectURL stream
+
 module.exports = User

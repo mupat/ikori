@@ -7,10 +7,21 @@ class Connection extends EventEmitter
     ]
   CHANNEL_OPTIONS:
     reliable: true
+  SCREEN_OPTIONS:
+    audio: false
+    video:
+      mandatory:
+        chromeMediaSource: 'screen'
+        maxWidth: 1280
+        maxHeight: 720
+      optional: []
 
   constructor: (@remote) ->
     @con = new window.webkitRTCPeerConnection null, @CON_OPTIONS
     @con.onicecandidate = @_gotCandidate
+    @con.onaddstream = (event) =>
+      console.log 'get stream in base class'
+      @emit 'stream', event.stream, @remote
 
   setICE: (msg) ->
     candidate = 
@@ -24,6 +35,17 @@ class Connection extends EventEmitter
 
   send: (msg) ->
     @channel.send msg
+
+  createStream: ->
+    success = (stream) =>
+      console.log 'success add stream', @con
+      @con.addStream stream
+
+    error = (err) =>
+      console.log 'eeror by stream'
+      @emit 'error', err
+
+    window.navigator.webkitGetUserMedia @SCREEN_OPTIONS, success, error
 
   _gotCandidate: (event) =>
     @emit 'ice', event.candidate, @remote if event.candidate

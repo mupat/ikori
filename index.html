@@ -15,7 +15,7 @@
       <label for="{{key}}">{{data.label}}</label>
       <input name="{{key}}" id="{{key}}" type="{{data.type}}" ng-model="editable[key].value" ng-blur="change(key, editable[key].value)" ng-focus="save(editable[key].value)"/>
     </div>
-    
+    <video id="screen" autoplay ng-show="video"></video>
   </div>
   <hr>
   <div ng-controller="PeerCtrl">
@@ -45,6 +45,7 @@
       <input type="text" name="msg" ng-model="msg" required ng-disabled="!open"></input>
       <button type="submit" ng-disabled="!open">send</button>
     </form>
+    <button ng-click="screen()" ng-disabled="!open">send screen</button>
   </div>
 </body>
 </html>
