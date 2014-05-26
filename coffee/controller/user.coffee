@@ -30,16 +30,12 @@ class User
       $scope.editable[key] = obj
     
     $scope.save = (value) =>
-      console.log 'save', value
       @oldValue = value
 
     $scope.change = (key, value) =>
-      console.log 'change', key, value, @oldValue
       if value? or value.length > 0
         localStorage[key] = value
         config[key] = value
-        console.log 'config', config, key, value
-        # window.angular.module('chatApp').constant 'CONFIG',config
       else
         $scope.editable[key].value = @oldValue
 
