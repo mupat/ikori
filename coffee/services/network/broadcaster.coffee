@@ -1,7 +1,7 @@
 EventEmitter = require('events').EventEmitter
 
 class Broadcaster extends EventEmitter
-  constructor: (@socket, @interfaces, @user, @config, @peer) ->
+  constructor: (@socket, @interfaces, @config, @peer) ->
     @socket.on 'ready', =>
       @_sendBroadcasts() #send initial broadcast
       setInterval @_sendBroadcasts.bind(@), @config.broadcastInterval #send broadcast in given interval
@@ -33,8 +33,8 @@ class Broadcaster extends EventEmitter
 
   _buildUser: ->
     return {
-      name: @user.name
-      uuid: @user.uuid
+      name: @config.name
+      uuid: @config.uuid
     }
 
   _sendBroadcasts: ->

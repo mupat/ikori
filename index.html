@@ -11,8 +11,11 @@
 </head>
 <body>
   <div ng-controller="UserCtrl">
-    <span>This is you: </span>
-    <strong>{{name}}</strong>
+    <div ng-repeat="(key, data) in editable">
+      <label for="{{key}}">{{data.label}}</label>
+      <input name="{{key}}" id="{{key}}" type="{{data.type}}" ng-model="editable[key].value" ng-blur="change(key, editable[key].value)" ng-focus="save(editable[key].value)"/>
+    </div>
+    
   </div>
   <hr>
   <div ng-controller="PeerCtrl">
@@ -39,7 +42,7 @@
   <br>
   <div ng-controller="MsgCtrl">
     <form ng-submit="send()">
-      <input type="text" name="msg" ng-model="msg" required ng-disabled="!open"></textarea>
+      <input type="text" name="msg" ng-model="msg" required ng-disabled="!open"></input>
       <button type="submit" ng-disabled="!open">send</button>
     </form>
   </div>

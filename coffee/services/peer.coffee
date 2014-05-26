@@ -12,8 +12,10 @@ class Peer
     uuid = data.uuid || remote.uuid
 
     # check if peer already exists
-    if @peers[uuid]?
+    if @exists(uuid)
       @peers[uuid].resetTimer() #reset timer for delete
+      @peers[uuid].infos = data
+      @$rootScope.$broadcast 'peer.update', @peers[uuid].infos
       return  #return if we have this peer already
 
     peer = @_createPeer data, remote

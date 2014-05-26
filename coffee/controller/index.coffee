@@ -26,7 +26,7 @@ chatAppControllers.controller 'HistoryCtrl', [
 ]
 chatAppControllers.controller 'UserCtrl', [
   '$scope'
-  'USER'
+  'CONFIG'
   UserCtrl
 ]
 

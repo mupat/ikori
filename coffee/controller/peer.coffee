@@ -11,6 +11,12 @@ class Peer
       $scope.$apply ->
         delete $scope.peers[infos.uuid]
 
+    $scope.$on 'peer.update', (scope, infos) ->
+      infos.open = $scope.peers[infos.uuid].open
+      $scope.$apply ->
+        delete $scope.peers[infos.uuid]
+        $scope.peers[infos.uuid] = infos
+
     $scope.$on 'channel.open', (scope, uuid) ->
       $scope.$apply ->
         $scope.peers[uuid].open = true

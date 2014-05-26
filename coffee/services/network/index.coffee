@@ -3,10 +3,10 @@ Interfaces = require './interfaces'
 Broadcaster = require './broadcaster'
 
 class Network
-  constructor: (@$rootScope, config, @user, peer) ->
-    interfaces = new Interfaces @user.interfaces
+  constructor: (@$rootScope, @config, peer) ->
+    interfaces = new Interfaces @config.interfaces
     @socket = new Socket config.port
-    @broadcaster = new Broadcaster @socket, interfaces.get(), @user, config, peer
+    @broadcaster = new Broadcaster @socket, interfaces.get(), @config, peer
 
     #register error event
     @socket.on 'error', (args...) =>
@@ -24,7 +24,7 @@ class Network
     return unless @socket.TYPES_WEBRTC[type]? #return if type isnt provided
     msg = 
       type: @socket.TYPES_WEBRTC[type]
-      uuid: @user.uuid
+      uuid: @config.uuid
 
     msg.data = data if data? # add data object if provided
     @socket.send msg, remote.address, remote.port

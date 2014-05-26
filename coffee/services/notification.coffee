@@ -19,7 +19,7 @@ class Notification
   focus: true  #hold if the main window has focus or not
   notification: null
 
-  constructor: ($rootScope, @user, @config) ->
+  constructor: ($rootScope, @config, @peers) ->
     @main = Window.get()
     @main.on 'blur', =>
       @focus = false
@@ -32,14 +32,14 @@ class Notification
       @main.close true
 
     #register for new remote messages
-    $rootScope.$on 'newRemoteMessage', (scope, msg, event, remote) =>
-      @new remote.address, msg
+    $rootScope.$on 'message.peer', (scope, msg, uuid) =>
+      @new @peers.getName(uuid), msg
 
   new: (origin, text) ->
     return if @focus # return if the chat has focus from the user
 
-    if @user.platform is 'darwin' #show other notification on mac
-      notify {title: origin, message: text, group: @GROUP_ID, sender: 'com.mupat.nodechat'}
+    if @config.platform is 'darwin' #show other notification on mac
+      notify {title: origin, message: text, group: @GROUP_ID, sender: @config.bundleIdentifier}
     else
       #check if a notification is open
       @_removeNotification() if @notification?
@@ -50,7 +50,7 @@ class Notification
       @notification.once 'focus', @_onFocus.bind(@)
 
   _removeNotification: ->
-    return if @user.platform is 'darwin'
+    return if @config.platform is 'darwin'
     return unless @notification?
 
     @notification.close()

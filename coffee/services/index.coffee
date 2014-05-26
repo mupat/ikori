@@ -15,14 +15,13 @@ chatAppServices.service 'peer', [
 
 chatAppServices.service 'notification', [
   '$rootScope'
-  'USER'
   'CONFIG'
+  'peer'
   Notification
 ]
 chatAppServices.service 'network', [
   '$rootScope'
   'CONFIG'
-  'USER'
   'peer'
   Network
 ]
