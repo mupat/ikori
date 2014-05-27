@@ -8,7 +8,6 @@ class Message
       $scope.msg = ''
      
     $scope.screen = =>
-      console.log 'button click'
       $rootScope.$broadcast 'message.screen', @peer
 
     $scope.$on 'peer.remove', (scope, uuid) =>

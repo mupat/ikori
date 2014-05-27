@@ -34,7 +34,6 @@ class Socket extends EventEmitter
         @emit 'error', 'got message with undefined type', msgJSON, remote
   
   start: ->
-    console.log 'bind'
     @udpSocket.bind @port
 
   sendBroadcast: (msgJSON, address) ->

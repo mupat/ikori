@@ -1,0 +1,70 @@
+@pathFont: './../fonts/robotoslab-';
+@pathIcon: './../fonts/nchat';
+
+@font-face {
+  font-family: 'roboto_slab';
+  src: url('@{pathFont}light.eot');
+  src: url('@{pathFont}light.eot?#iefix') format('embedded-opentype'),
+       url('@{pathFont}light.woff') format('woff'),
+       url('@{pathFont}light.ttf') format('truetype'),
+       url('@{pathFont}light.svg#roboto_slablight') format('svg');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto_slab';
+  src: url('@{pathFont}thin.eot');
+  src: url('@{pathFont}thin.eot?#iefix') format('embedded-opentype'),
+       url('@{pathFont}thin.woff') format('woff'),
+       url('@{pathFont}thin.ttf') format('truetype'),
+       url('@{pathFont}thin.svg#roboto_slabthin') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "nchat";
+  src:url("@{pathIcon}.eot");
+  src:url("@{pathIcon}.eot?#iefix") format("embedded-opentype"),
+    url("@{pathIcon}.woff") format("woff"),
+    url("@{pathIcon}.ttf") format("truetype"),
+    url("@{pathIcon}.svg#nchat") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "nchat" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zoom-in:before {
+  content: "\e000";
+}
+.icon-zoom-out:before {
+  content: "\e001";
+}
+.icon-bubble-1:before {
+  content: "\e002";
+}
+.icon-bubble-2:before {
+  content: "\e003";
+}
+.icon-bubble-3:before {
+  content: "\e004";
+}
+.icon-tools:before {
+  content: "\e005";
+}
+.icon-keyboard:before {
+  content: "\e006";
+}

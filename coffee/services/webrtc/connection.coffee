@@ -20,7 +20,6 @@ class Connection extends EventEmitter
     @con = new window.webkitRTCPeerConnection null, @CON_OPTIONS
     @con.onicecandidate = @_gotCandidate
     @con.onaddstream = (event) =>
-      console.log 'get stream in base class'
       @emit 'stream', event.stream, @remote
 
   setICE: (msg) ->
@@ -38,11 +37,9 @@ class Connection extends EventEmitter
 
   createStream: ->
     success = (stream) =>
-      console.log 'success add stream', @con
       @con.addStream stream
 
     error = (err) =>
-      console.log 'eeror by stream'
       @emit 'error', err
 
     window.navigator.webkitGetUserMedia @SCREEN_OPTIONS, success, error

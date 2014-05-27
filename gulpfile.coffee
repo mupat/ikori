@@ -3,43 +3,42 @@ less = require 'gulp-less'
 coffee = require 'gulp-coffee'
 gutil = require 'gulp-util'
 rename = require 'gulp-rename'
-gulpif = require 'gulp-if'
 notify = require 'gulp-notify'
+flatten = require 'gulp-flatten'
 fs = require 'fs'
 
 handleError = (err) ->
   this.emit 'end'
 
-paths =
-  source: {
-    coffee: './coffee/**/*.coffee'
-    less: './less/'
-  },
-  dest: {
-    js: './public/js/'
-    css: './public/css/'
-  }
+source =
+  coffee: './coffee/**/*.coffee'
+  less: './less/'
+  fonts: './fonts/**/*.{eot,svg,ttf,woff}'
+
+dest =
+  js: './public/js/'
+  css: './public/css/'
+  fonts: './public/fonts/'
 
 gulp.task 'coffee', ->
-  gulp.src(paths.source.coffee)
+  gulp.src(source.coffee)
     .pipe(coffee({bare: true}).on('error', handleError).on('error', notify.onError('<%= error.message %>')))
-    .pipe gulp.dest(paths.dest.js)
+    .pipe gulp.dest(dest.js)
 
 gulp.task 'less', ->
-  gulp.src(paths.source.less + 'main.less')
+  gulp.src(source.less + 'main.less')
     .pipe(less().on('error', handleError).on('error', notify.onError('<%= error.message %>')))
     .pipe(rename({basename: 'style'}))
-    .pipe gulp.dest(paths.dest.css)
+    .pipe gulp.dest(dest.css)
 
 gulp.task 'watch', ->
-  gulp.watch paths.source.coffee, ['coffee']
-  gulp.watch paths.source.less + '**/*.less', ['less']
-  notify( -> console.log('test'); return 'test'; )
+  gulp.watch source.coffee, ['coffee']
+  gulp.watch source.less + '**/*.less', ['less']
 
-gulp.task 'copyConfig', ->
-  gulp.src('./config/config.example')
-    .pipe(gulpif(!fs.existsSync('./config/user.json'), rename({basename: 'user', extname: '.json'})))
-    .pipe gulp.dest('./config/')
+gulp.task 'font', ->
+  gulp.src(source.fonts)
+    .pipe(flatten())
+    .pipe gulp.dest(dest.fonts)
 
-gulp.task 'build', ['coffee', 'less', 'copyConfig']
+gulp.task 'build', ['coffee', 'less', 'font']
 gulp.task 'default', ['build', 'watch']

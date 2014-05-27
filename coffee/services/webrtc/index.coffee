@@ -23,7 +23,6 @@ class WebRTC
 
     @$rootScope.$on 'message.screen', (scope, uuid) =>
       return unless @peer.hasConnection(uuid)
-      console.log 'event and create'
       @peer.getConnection(uuid).createStream()
 
   send: (uuid, msg) ->
@@ -63,7 +62,6 @@ class WebRTC
 
   _registerChannelEvents: (con, channel, uuid) ->
     con.on 'stream', (stream) =>
-      console.log 'got stream'
       @$rootScope.$broadcast 'message.stream', stream
 
     channel.onmessage = (event) =>
