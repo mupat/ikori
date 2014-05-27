@@ -71,10 +71,8 @@ class WebRTC
     @peer.setConnection remote.uuid, offerer
 
   _registerChannelEvents: (con, channel, uuid) ->
-    # console.log 'create channel event', con
-    # con.on 'stream.get', (stream) =>
-    #   console.log 'got stream'
-    #   @$rootScope.$broadcast 'message.stream', stream
+    con.on 'error', (error) =>
+      @$rootScope.$emit 'error', 'error by using the stream', error
 
     channel.onmessage = (event) =>
       @$rootScope.$broadcast 'message.peer', event.data, uuid

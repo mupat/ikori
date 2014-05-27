@@ -41,7 +41,7 @@ class User
 
     $scope.video = false
     $scope.$on 'message.stream', (scope, stream) ->
-      console.log 'render stream'
+      console.log 'render stream', stream, stream.getVideoTracks()
       $scope.video = true
       window.document.getElementById('screen').src = window.URL.createObjectURL stream
 

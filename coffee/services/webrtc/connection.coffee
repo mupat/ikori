@@ -12,8 +12,12 @@ class Connection extends EventEmitter
     video:
       mandatory:
         chromeMediaSource: 'screen'
-        maxWidth: 1280
-        maxHeight: 720
+        minWidth: window.screen.width
+        minHeight: window.screen.height
+        maxWidth: window.screen.width
+        maxHeight: window.screen.height
+        minFrameRate: 1
+        maxFrameRate: 5
       optional: []
 
   constructor: (@remote, stream = null) ->
