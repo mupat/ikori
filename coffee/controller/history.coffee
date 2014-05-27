@@ -14,7 +14,7 @@ class History
         $scope.history = history
 
     $scope.$on 'message.peer', (scope, msg, uuid) =>
-      @_createEntry msg, @peers.getName(uuid), uuid
+      @_createEntry msg, uuid, uuid
       $scope.$apply ->
         $scope.history
 
@@ -27,10 +27,18 @@ class History
     $scope.$on 'peer.close', (scope, uuid) =>
       @_remove uuid
 
+    $scope.$on 'peer.update', (scope, uuid) =>
+      if @peer is uuid
+        $scope.history = window.angular.copy($scope.history)
+
     $scope.formatTime = (time) =>
       utc = moment.utc(time)
       timezone = moment().zone()
       return utc.subtract('minute', timezone).format(@DATE_FORMAT)
+
+    $scope.formatOrigin = (origin) =>
+      return origin if origin is 'you'
+      return @peers.getName(origin)
 
   _createEntry: (msg, origin, uuid) ->
     obj =
