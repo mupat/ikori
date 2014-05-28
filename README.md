@@ -14,8 +14,7 @@ error while loading shared libraries: libudev.so.0: can
 not open shared object file: No such file or directory
 ```
 check this [site](https://github.com/rogerwang/node-webkit/wiki/The-solution-of-lacking-libudev.so.0) and run the *One line fix*
-- `cd node_modules/nodewebkit/nodewebkit/`
-- `sed -i 's/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x30/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x31/g' nw`
+- `sed -i 's/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x30/\x75\x64\x65\x76\x2E\x73\x6F\x2E\x31/g' node_modules/nodewebkit/nodewebkit/nw`
 
 ## troubleshooting mac
 - if you get an error like
