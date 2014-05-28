@@ -1,5 +1,5 @@
 {
-  "name": "node_chat",
+  "name": "ikori",
   "private": true,
   "dependencies": {
     "angular": "1.2.16"
