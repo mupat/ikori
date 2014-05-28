@@ -36,5 +36,6 @@
     "position": "center",
     "focus": true,
     "show": false
-  }
+  },
+  "inject-js-end": "public/js/shortcut.js"
 }
