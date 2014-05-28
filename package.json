@@ -32,7 +32,7 @@
   "engineStrict": true,
   "window": {
     "title": "ikori",
-    "toolbar": true,
+    "toolbar": false,
     "position": "center",
     "focus": true,
     "show": false

@@ -3,8 +3,7 @@ mapKeys =
   82: 'r'
   73: 'i'
   67: 'c'
-  # 86: 'v'
-  90: 'v'
+  86: 'v'
 
 gui = require 'nw.gui'
 win = gui.Window.get()
@@ -18,8 +17,8 @@ devtools = (event) ->
   if win.isDevToolsOpen() then win.closeDevTools()
   else win.showDevTools()
 
-copy = (text) ->
-  clipboard.set text, 'text'
+copy = ->
+  clipboard.set window.getSelection().toString(), 'text'
 
 paste = ->
   window.document.activeElement.value = clipboard.get('text')
@@ -33,13 +32,11 @@ window.document.onkeydown = (event) ->
       return unless event.metaKey
       reload event
     when 'i' # devtools
-      devtools event if event.metaKey and event.altKey # on mac
+      return devtools event if event.metaKey and event.altKey # on mac
       devtools event if event.shiftKey and event.ctrlKey # on linux and win
     when 'c' # copy to clipboard
-      copy window.getSelection().toString() if event.metaKey # on mac
-      copy window.getSelection().toString() if event.ctrlKey # on linux and win
+      return copy() if event.metaKey # on mac
+      copy() if event.ctrlKey # on linux and win
     when 'v' # paste from clipboard
-      paste() if event.metaKey # on mac
+      return paste() if event.metaKey # on mac
       paste() if event.ctrlKey # on linux and win
-
-console.log 'win', window
