@@ -1,4 +1,7 @@
-# node chat
+# ikori
+Peer to peer chat based on [nodewebkit](https://github.com/rogerwang/node-webkit) and webrtc.
+
+ikori == language `igbo` for chat
 
 ## How to install
 - install node via [nvm](https://github.com/creationix/nvm)
