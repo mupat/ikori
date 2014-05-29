@@ -36,7 +36,11 @@
     "toolbar": false,
     "position": "center",
     "focus": true,
-    "show": false
+    "show": false,
+    "min_width": 300,
+    "min_height": 300,
+    "width": 300,
+    "height": 500
   },
   "inject-js-end": "public/js/shortcut.js"
 }
