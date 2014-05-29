@@ -1,10 +1,10 @@
 {
-  "name": "node_chat",
+  "name": "ikori",
   "version": "0.0.1",
-  "description": "peer to peer chat based on node.js and node-webkit",
+  "description": "peer to peer chat based on node.js, node-webkit and webrtc",
   "main": "index.html",
   "author": "Patrick Mueller(dev@mupat.net)",
-  "repository": "https://github.com/mupat/node_chat",
+  "repository": "https://github.com/mupat/ikori",
   "license": "MIT",
   "dependencies": {
     "async": "0.9.0",
@@ -32,10 +32,11 @@
   },
   "engineStrict": true,
   "window": {
-    "title": "node_chat",
-    "toolbar": true,
+    "title": "ikori",
+    "toolbar": false,
     "position": "center",
     "focus": true,
     "show": false
-  }
+  },
+  "inject-js-end": "public/js/shortcut.js"
 }

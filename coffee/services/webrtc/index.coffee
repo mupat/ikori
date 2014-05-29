@@ -4,15 +4,15 @@ Offerer = require './offerer'
 class WebRTC
   constructor: (@$rootScope, @network, @peer) ->
     @$rootScope.$on 'offer', (scope, remote, offer) =>
-      return if @peer.hasConnection(remote.uuid)
+      # return if @peer.hasConnection(remote.uuid)
       @_connectByAnswer remote, offer
 
     @$rootScope.$on 'ice', (scope, remote, ice) =>
-      return if @peer.hasConnection(remote.uuid)
+      # return if @peer.hasConnection(remote.uuid)
       @peer.getConnection(remote.uuid).setICE ice
 
     @$rootScope.$on 'answer', (scope, remote, desc) =>
-      return if @peer.hasConnection(remote.uuid)
+      # return if @peer.hasConnection(remote.uuid)
       @peer.getConnection(remote.uuid).setRemoteDescription desc
 
     @$rootScope.$on 'peer.remove', (scope, infos) =>
@@ -22,19 +22,24 @@ class WebRTC
       @send uuid, msg
 
     @$rootScope.$on 'message.screen', (scope, uuid) =>
-      return unless @peer.hasConnection(uuid)
-      @peer.getConnection(uuid).createStream()
+      # return unless @peer.hasConnection(uuid)
+      # @_close uuid
+      console.log 'event and create'
+      con = @peer.getConnection(uuid)
+      con.on 'stream.add', (stream) =>
+        console.log 'restarted'
+        @connect uuid, stream
 
   send: (uuid, msg) ->
     return unless @peer.hasConnection(uuid)
     @peer.getConnection(uuid).send msg
 
-  connect: (uuid) ->
+  connect: (uuid, stream = null) ->
     if @peer.hasConnection(uuid)
       @$rootScope.$broadcast 'channel.open', uuid #emit open event, as it is already open
       return
 
-    @_connectByOffer @peer.getRemote(uuid)
+    @_connectByOffer @peer.getRemote(uuid), stream
 
   _close: (uuid) ->
     con = @peer.getConnection uuid
@@ -44,6 +49,9 @@ class WebRTC
 
   _connectByAnswer: (remote, offer) ->
     answerer = new Answerer remote, offer
+    answerer.on 'stream.get', (stream) =>
+      console.log 'got stream'
+      @$rootScope.$broadcast 'message.stream', stream
     answerer.on 'ice', @_sendICE.bind(@, answerer)
     answerer.on 'datachannel', @_registerChannelEvents.bind(@, answerer)
     answerer.on 'answer', (desc, remote) =>
@@ -51,8 +59,8 @@ class WebRTC
 
     @peer.setConnection remote.uuid, answerer
 
-  _connectByOffer: (remote) ->
-    offerer = new Offerer remote
+  _connectByOffer: (remote, stream) ->
+    offerer = new Offerer remote, stream
     offerer.on 'ice', @_sendICE.bind(@, offerer)
     @_registerChannelEvents offerer, offerer.channel, remote.uuid
     offerer.on 'offer', (desc, remote) =>
@@ -61,8 +69,8 @@ class WebRTC
     @peer.setConnection remote.uuid, offerer
 
   _registerChannelEvents: (con, channel, uuid) ->
-    con.on 'stream', (stream) =>
-      @$rootScope.$broadcast 'message.stream', stream
+    con.on 'error', (error) =>
+      @$rootScope.$emit 'error', 'error by using the stream', error
 
     channel.onmessage = (event) =>
       @$rootScope.$broadcast 'message.peer', event.data, uuid

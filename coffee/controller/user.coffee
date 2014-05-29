@@ -1,7 +1,8 @@
 localStorage = window.localStorage
 
 class User
-  constructor: ($scope, config) ->
+  constructor: ($rootScope, $scope, config) ->
+    $rootScope.name = config.name #set own name as title
     $scope.editable = {}
     #map config informations to scope
     for key, value of config
@@ -36,12 +37,14 @@ class User
       if value? or value.length > 0
         localStorage[key] = value
         config[key] = value
+        if key is 'name'
+          $rootScope.name = config.name #update own name in title
       else
         $scope.editable[key].value = @oldValue
 
     $scope.video = false
     $scope.$on 'message.stream', (scope, stream) ->
       $scope.video = true
-      window.angular.element('#video').src = window.URL.createObjectURL stream
+      window.document.getElementById('screen').src = window.URL.createObjectURL stream
 
 module.exports = User

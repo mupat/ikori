@@ -7,6 +7,7 @@ class Interfaces
     @_addBroadcastAddress network for network in @interfaces
 
   get: ->
+    console.log 'inter', @interfaces
     return @interfaces
 
   # add broadcast address to every network interface
