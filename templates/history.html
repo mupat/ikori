@@ -1,0 +1,6 @@
+<h4>History</h4>
+<ul>
+  <li ng-repeat="line in history track by $index | orderBy:line.time">
+    [<strong>{{line.origin}}</strong>] [{{formatTime(line.time)}}] : {{line.msg}}
+  </li>
+</ul>

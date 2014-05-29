@@ -14,11 +14,13 @@ source =
   coffee: './coffee/**/*.coffee'
   less: './less/'
   fonts: './fonts/**/*.{eot,svg,ttf,woff}'
+  templates: './templates/**/*.html'
 
 dest =
   js: './public/js/'
   css: './public/css/'
   fonts: './public/fonts/'
+  templates: './public/templates'
 
 gulp.task 'coffee', ->
   gulp.src(source.coffee)
@@ -34,11 +36,17 @@ gulp.task 'less', ->
 gulp.task 'watch', ->
   gulp.watch source.coffee, ['coffee']
   gulp.watch source.less + '**/*.less', ['less']
+  gulp.watch source.fonts, ['font']
+  gulp.watch source.templates, ['template']
 
 gulp.task 'font', ->
   gulp.src(source.fonts)
     .pipe(flatten())
     .pipe gulp.dest(dest.fonts)
 
-gulp.task 'build', ['coffee', 'less', 'font']
+gulp.task 'template', ->
+  gulp.src(source.templates)
+    .pipe gulp.dest(dest.templates)
+
+gulp.task 'build', ['coffee', 'less', 'font', 'template']
 gulp.task 'default', ['build', 'watch']
