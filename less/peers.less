@@ -1,9 +1,15 @@
 #peers {
-  width: 19%;
+  width: @sidebarWidth;
   background-color: @backgroundHighlight;
-  display: inline-block;
   height: 100%;
-  padding: 10px;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  .sidebarTransition();
+
+  > div {
+    height: @topHeight;
+  }
 
   li {
     list-style: none;
@@ -11,10 +17,20 @@
     .fontLight();
     color: @blue;
     cursor: pointer;
-    transition: ~"* 0.5s";
+    .colorTransition();
 
     &:hover {
       background-color: @background;  
     }
   }
+
+  @media @small {
+    & {
+      left: -@sidebarWidth;
+    }
+  }
+}
+
+.sidebarOpen #peers {
+  left: 0;
 }

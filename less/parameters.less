@@ -1,23 +1,54 @@
 //font
 @font: 'roboto_slab';
-@thin: 100;
-@normal: 300;
+@thinWeight: 100;
+@normalWeight: 300;
 
 .fontLight() {
   font-family: @font;
-  font-weight: @thin;
+  font-weight: @thinWeight;
 }
 
 .fontNormal() {
   font-family: @font;
-  font-weight: @normal;
+  font-weight: @normalWeight;
 }
 
 //colors
 @background: #FFFFFF;
-@backgroundHighlight: #FAFAFA;
+@backgroundHighlight: #292c2c;
 @blue: #4082A2;
 @red: #C86957;
 @highlight1: #CC9078;
 @highlight2: #D1AE9B;
 @highlight3: #C7AC77;
+@text: #000000;
+
+//default sizes
+@sidebarWidth: 20rem;
+@topHeight: 3.5rem;
+
+//media query
+@small: ~"only screen and (max-width: 499px)";
+@normal: ~"only screen and (min-width: 500px)";
+
+//mixins
+.sidebarTransition() {
+  transition: all 1s ease;
+}
+
+.colorTransition() {
+  transition: color 0.5s ease;
+}
+
+.allTransition() {
+  transition: all 1s ease;
+}
+
+.permanentOpenSidebar() {
+  width: (calc(~"100% - @{sidebarWidth}"));
+  left: @sidebarWidth;
+}
+
+.sidebarOpen() {
+  left: @sidebarWidth;
+}

@@ -9,12 +9,19 @@
   <script type="text/javascript" src="public/js/index.js"></script>
   <link rel="stylesheet" type="text/css" href="public/css/style.css">
 </head>
-<body>
-  <div ng-controller="UserCtrl" ng-include="'public/templates/user.html'"></div>
+<body class="sidebarOpen" ng-class="{sidebarOpen: sidebarOpen, optionsOpen: optionsOpen}" ng-init="sidebarOpen = true">
+  <div id="overlay" ng-click="optionsOpen = false"></div>
+  <div id="status">
+    <input type="checkbox" id="peerListSwitch" ng-click="sidebarOpen = !sidebarOpen" />
+    <label for="peerListSwitch" class="icon-atom"></label>
+    <div ng-click="sidebarOpen = false">
+    </div>
+  </div>
   <div id="peers" ng-controller="PeerCtrl" ng-include="'public/templates/peer.html'"></div>
-  <div id="content">
+  <div id="content" ng-click="sidebarOpen = false">
     <div ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'"></div>
     <div ng-controller="MsgCtrl" ng-include="'public/templates/msg.html'"></div>
   </div>
+  <div ng-controller="OptionsCtrl" ng-include="'public/templates/options.html'" id="options"></div>
 </body>
 </html>

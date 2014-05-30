@@ -1,0 +1,47 @@
+#status {
+  display: block;
+  position: relative;
+  padding: 0.5rem;
+  background-color: @background;
+  height: @topHeight;
+
+  > div {
+    width: 100%;
+    display: block;
+    height: 100%;
+  }
+
+  .sidebarTransition();
+
+  @media @normal {
+    .permanentOpenSidebar();
+
+    > label,
+    > input[type="checkbox"] {
+      display: none;
+    }
+  }
+
+  @media @small {
+    > input[type="checkbox"] {
+      position: absolute; 
+      clip: rect(0,0,0,0);
+    }
+
+    > label {
+      font-size: 2.5rem;
+      cursor: pointer;
+      .colorTransition();
+      &:hover {
+        color: @blue;
+      }
+    }
+  }
+}
+
+.sidebarOpen #status {
+  .sidebarOpen();
+  > label {
+    color: @blue;
+  }
+}

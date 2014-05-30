@@ -1,8 +1,12 @@
 localStorage = window.localStorage
 
-class User
+class Options
   constructor: ($rootScope, $scope, config) ->
     $rootScope.name = config.name #set own name as title
+
+    $scope.toggle = ->
+      $rootScope.optionsOpen = !$rootScope.optionsOpen
+
     $scope.editable = {}
     #map config informations to scope
     for key, value of config
@@ -47,4 +51,4 @@ class User
       $scope.video = true
       window.document.getElementById('screen').src = window.URL.createObjectURL stream
 
-module.exports = User
+module.exports = Options

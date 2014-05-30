@@ -1,3 +1,6 @@
+<div>
+  <h2>Peers</h2>
+</div>
 <ul>
   <li ng-repeat="(uuid, data) in peers | orderBy:data.name" ng-click="startConnection(uuid)">
     {{data.name}} <span ng-show="data.open">open</span>

@@ -1,5 +1,5 @@
 @pathFont: './../fonts/robotoslab-';
-@pathIcon: './../fonts/nchat';
+@pathIcon: './../fonts/ikori';
 
 @font-face {
   font-family: 'roboto_slab';
@@ -8,7 +8,7 @@
        url('@{pathFont}light.woff') format('woff'),
        url('@{pathFont}light.ttf') format('truetype'),
        url('@{pathFont}light.svg#roboto_slablight') format('svg');
-  font-weight: 100;
+  font-weight: 300;
   font-style: normal;
 }
 
@@ -19,24 +19,24 @@
        url('@{pathFont}thin.woff') format('woff'),
        url('@{pathFont}thin.ttf') format('truetype'),
        url('@{pathFont}thin.svg#roboto_slabthin') format('svg');
-  font-weight: 300;
+  font-weight: 100;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "nchat";
+  font-family: "ikori";
   src:url("@{pathIcon}.eot");
   src:url("@{pathIcon}.eot?#iefix") format("embedded-opentype"),
     url("@{pathIcon}.woff") format("woff"),
     url("@{pathIcon}.ttf") format("truetype"),
-    url("@{pathIcon}.svg#nchat") format("svg");
+    url("@{pathIcon}.svg#ikori") format("svg");
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
-  font-family: "nchat" !important;
+  font-family: "ikori" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -67,4 +67,13 @@
 }
 .icon-keyboard:before {
   content: "\e006";
+}
+.icon-arrows:before {
+  content: "\e007";
+}
+.icon-share-outline:before {
+  content: "\e010";
+}
+.icon-atom:before {
+  content: "\e011";
 }

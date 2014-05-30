@@ -3,7 +3,7 @@ Start = require "#{path}start"
 PeerCtrl = require "#{path}peer"
 MsgCtrl = require "#{path}message"
 HistoryCtrl = require "#{path}history"
-UserCtrl = require "#{path}user"
+OptionsCtrl = require "#{path}options"
 
 chatAppControllers = angular.module 'chatApp.controllers', []
 
@@ -24,11 +24,11 @@ chatAppControllers.controller 'HistoryCtrl', [
   'peer'
   HistoryCtrl
 ]
-chatAppControllers.controller 'UserCtrl', [
+chatAppControllers.controller 'OptionsCtrl', [
   '$rootScope'
   '$scope'
   'CONFIG'
-  UserCtrl
+  OptionsCtrl
 ]
 
 chatAppControllers.run ['network', 'notification', Start]

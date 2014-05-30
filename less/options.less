@@ -1,0 +1,66 @@
+#options {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  .allTransition();
+  -webkit-transform: scale(1.25);
+  padding: 1rem;
+
+  > div {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
+
+    > h1 {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid @backgroundHighlight;
+    }
+  }
+
+  > span {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 2;
+    .allTransition();
+
+    &:hover {
+      color: @blue;
+    }
+  }
+}
+
+.sidebarOpen #options > span {
+  color: @background;
+}
+
+.optionsOpen {
+  -webkit-transform: scale(0.75);
+
+  #options {
+    width: 75%;
+    height: 75%;
+    z-index: 2;
+    bottom: 12.5%;
+    left: 12.5%;
+    background-color: @background;
+
+    > span {
+      left: 0.5rem;
+      bottom: 0.5rem;
+      color: @text;
+    }
+
+    > div {
+      transition: opacity 0.25s ease 0.75s;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

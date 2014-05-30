@@ -5,4 +5,28 @@ html {
 body, html {
   .fontNormal();
   height: 100%;
+  color: @text;
+  background-color: @backgroundHighlight;
+}
+
+body {
+  overflow: hidden;
+  transition: -webkit-transform 1s ease;
+  -webkit-transform: scale(1);
+}
+
+h1 {
+  .fontLight();
+  font-size: 2.5rem;
+  line-height: 4.375rem;
+  color: @blue;
+  text-align: center;
+}
+
+h2 {
+  .fontLight();
+  font-size: 2rem;
+  line-height: 3.5rem;
+  color: @blue;
+  text-align: center;
 }

@@ -5,7 +5,7 @@ screen = window.screen
 class Notification
   MARGIN: 25 #margin to top and right
   GROUP_ID: 'chat' #group id for notifications on mac
-  TEMPLATE: 'app://local/notification.html' #template, relative to the root path
+  TEMPLATE: 'app://local/public/templates/notification.html' #template, relative to the root path
   OPTIONS: # options for the new window
     frame: false
     toolbar: false

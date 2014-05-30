@@ -1,7 +1,27 @@
 #content {
-  width: 75%;
   height: 100%;
-  display: inline-block;
-  float: right;
   background-color: @background;
+  position: relative;
+
+  .sidebarTransition();
+  @media @normal {
+    .permanentOpenSidebar();
+  }
+
+  @media @small {
+    > input[type="checkbox"] {
+      position: absolute; 
+      clip: rect(0,0,0,0);
+    }
+
+    > label {
+      font-size: 2.5rem;
+      cursor: pointer;
+      transition: color 0.5s ease;
+    }
+  }
+}
+
+.sidebarOpen #content {
+  .sidebarOpen();
 }
