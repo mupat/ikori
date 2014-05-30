@@ -7,32 +7,35 @@ class Options
     $scope.toggle = ->
       $rootScope.optionsOpen = !$rootScope.optionsOpen
 
-    $scope.editable = {}
-    #map config informations to scope
-    for key, value of config
-      switch key
-        when 'port'
-          type = 'number'
-          label = key
-        when 'name'
-          type = 'text'
-          label = "your name"
-        when 'broadcastInterval'
-          type = 'number'
-          label = "Interval for broadcast messages"
-        when 'notificationInterval'
-          type = 'number'
-          label = "Interval for notification messages"
-        when 'logging'
-          type = 'checkbox'
-          label = key
-        else continue
+    $scope.name = config.name
+    $scope.notification_interval = config.notificationInterval
 
-      obj = 
-        value: value
-        type: type
-        label: label
-      $scope.editable[key] = obj
+    # $scope.editable = {}
+    # #map config informations to scope
+    # for key, value of config
+    #   switch key
+    #     when 'port'
+    #       type = 'number'
+    #       label = key
+    #     when 'name'
+    #       type = 'text'
+    #       label = "your name"
+    #     when 'broadcastInterval'
+    #       type = 'number'
+    #       label = "Interval for broadcast messages"
+    #     when 'notificationInterval'
+    #       type = 'number'
+    #       label = "Interval for notification messages"
+    #     when 'logging'
+    #       type = 'checkbox'
+    #       label = key
+    #     else continue
+
+    #   obj = 
+    #     value: value
+    #     type: type
+    #     label: label
+    #   $scope.editable[key] = obj
     
     $scope.save = (value) =>
       @oldValue = value

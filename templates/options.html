@@ -1,9 +1,12 @@
 <span class="icon-tools" ng-click="toggle()"></span>
 <div>
   <h1>Options</h1>
-  <div ng-repeat="(key, data) in editable">
+  <p>
+    You appear as <input type="text" ng-model="name" ca-width/> to other peers and your notificions will be hidden after <input type="number" ng-model="notification_interval" /> seconds.
+  </p>
+  <!-- <div ng-repeat="(key, data) in editable">
     <label for="{{key}}">{{data.label}}</label>
     <input name="{{key}}" id="{{key}}" type="{{data.type}}" ng-model="editable[key].value" ng-blur="change(key, editable[key].value)" ng-focus="save(editable[key].value)"/>
-  </div>
+  </div> -->
   <video width="1920" height="1080" id="screen" autoplay ng-show="video"></video>
 </div>

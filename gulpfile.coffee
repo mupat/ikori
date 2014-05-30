@@ -33,7 +33,7 @@ gulp.task 'less', ->
     .pipe(rename({basename: 'style'}))
     .pipe gulp.dest(dest.css)
 
-gulp.task 'watch', ->
+gulp.task '_watch', ->
   gulp.watch source.coffee, ['coffee']
   gulp.watch source.less + '**/*.less', ['less']
   gulp.watch source.fonts, ['font']
@@ -48,5 +48,6 @@ gulp.task 'template', ->
   gulp.src(source.templates)
     .pipe gulp.dest(dest.templates)
 
+gulp.task 'watch', ['build', '_watch']
 gulp.task 'build', ['coffee', 'less', 'font', 'template']
 gulp.task 'default', ['build', 'watch']

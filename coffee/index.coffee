@@ -44,6 +44,7 @@ async.waterfall [
   chatApp = angular.module 'chatApp', [
     'chatApp.controllers'
     'chatApp.services'
+    'chatApp.directives'
   ]
   chatApp.value 'CONFIG', results
   chatApp.factory '$exceptionHandler', ->

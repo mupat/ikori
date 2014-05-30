@@ -1,3 +1,8 @@
+.sidebarOpen #options > span {
+  color: @background;
+}
+
+
 #options {
   position: absolute;
   bottom: 1rem;
@@ -13,12 +18,6 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.25s ease;
-
-    > h1 {
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid @backgroundHighlight;
-    }
   }
 
   > span {
@@ -34,10 +33,6 @@
       color: @blue;
     }
   }
-}
-
-.sidebarOpen #options > span {
-  color: @background;
 }
 
 .optionsOpen {
@@ -61,6 +56,29 @@
       transition: opacity 0.25s ease 0.75s;
       opacity: 1;
       visibility: visible;
+    }
+  }
+}
+
+#options > div {
+  > h1 {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid @backgroundHighlight;
+  }
+  > p {
+    font-size: 1.75rem;
+    margin: 2.5rem 0;
+    line-height: 3.5rem;
+
+    > input {
+      font-size: 3rem;
+      border: none;
+      background: transparent;
+      color: @blue;
+      width: auto;
+      position: relative;
+      top: 0.5rem;
     }
   }
 }
