@@ -2,7 +2,7 @@
 <div>
   <h1>Options</h1>
   <p>
-    You appear as <input type="text" ng-model="name" ca-width/> to other peers and your notificions will be hidden after <input type="number" ng-model="notification_interval" /> seconds.
+    You appear as <span contenteditable ng-model="name" ng-blur="test(name)"></span> to other peers and your notificions will be hidden after <span contenteditable>{{notification_interval}}</span> seconds.
   </p>
   <!-- <div ng-repeat="(key, data) in editable">
     <label for="{{key}}">{{data.label}}</label>

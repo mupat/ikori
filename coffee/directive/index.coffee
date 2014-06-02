@@ -1,7 +1,6 @@
 path = "./public/js/directive/"
-width = require "#{path}width"
+Editable = require "#{path}editable"
 
 chatAppControllers = angular.module 'chatApp.directives', []
 
-chatAppControllers.directive 'caWidth', ->
-  return width
+chatAppControllers.directive 'contenteditable', -> new Editable()

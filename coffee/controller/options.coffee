@@ -9,7 +9,8 @@ class Options
 
     $scope.name = config.name
     $scope.notification_interval = config.notificationInterval
-
+    $scope.test = (name) ->
+        console.log 'blur', name, $scope.name
     # $scope.editable = {}
     # #map config informations to scope
     # for key, value of config
