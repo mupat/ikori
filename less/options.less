@@ -1,8 +1,3 @@
-.sidebarOpen #options > span {
-  color: @background;
-}
-
-
 #options {
   position: absolute;
   bottom: 1rem;
@@ -28,11 +23,16 @@
     font-size: 1.5rem;
     z-index: 2;
     .allTransition();
+    color: @gray;
 
     &:hover {
-      color: @blue;
+      color: @blue !important;
     }
   }
+}
+
+.sidebarOpen #options > span {
+  color: @background;
 }
 
 .optionsOpen {
@@ -76,6 +76,11 @@
       font-size: 3rem;
       color: @blue;
       cursor: pointer;
+
+      &:focus {
+        background-color: @gray;
+        outline: none;
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
-<form ng-submit="send()">
-  <input type="text" name="msg" ng-model="msg" required ng-disabled="!open"></input>
-  <button type="submit" ng-disabled="!open">send</button>
+<form ng-submit="send()" >
+  <input type="text" name="msg" ng-model="msg" required placeholder="Enter your message" ></input>
+  <button type="submit" class="icon-keyboard"></button>
 </form>
-<button ng-click="screen()" ng-disabled="!open" class="icon-keyboard">send screen</button>
+<!--   <button ng-click="screen()" class="icon-keyboard">send screen</button>
+ -->

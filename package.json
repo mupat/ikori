@@ -39,7 +39,7 @@
     "show": false,
     "min_width": 300,
     "min_height": 300,
-    "width": 300,
+    "width": 800,
     "height": 500
   },
   "inject-js-end": "public/js/shortcut.js"
