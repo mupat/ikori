@@ -8,47 +8,17 @@ class Options
       $rootScope.optionsOpen = !$rootScope.optionsOpen
 
     $scope.name = config.name
-    $scope.notification_interval = config.notificationInterval
-    $scope.test = (name) ->
-        console.log 'blur', name, $scope.name
-    # $scope.editable = {}
-    # #map config informations to scope
-    # for key, value of config
-    #   switch key
-    #     when 'port'
-    #       type = 'number'
-    #       label = key
-    #     when 'name'
-    #       type = 'text'
-    #       label = "your name"
-    #     when 'broadcastInterval'
-    #       type = 'number'
-    #       label = "Interval for broadcast messages"
-    #     when 'notificationInterval'
-    #       type = 'number'
-    #       label = "Interval for notification messages"
-    #     when 'logging'
-    #       type = 'checkbox'
-    #       label = key
-    #     else continue
-
-    #   obj = 
-    #     value: value
-    #     type: type
-    #     label: label
-    #   $scope.editable[key] = obj
+    $scope.notificationInterval = config.notificationInterval
     
-    $scope.save = (value) =>
-      @oldValue = value
+    $scope.save = (key, value) =>
+      return unless value?
 
-    $scope.change = (key, value) =>
-      if value? or value.length > 0
+      if value isnt config[key]
         localStorage[key] = value
         config[key] = value
+        #update own name in title
         if key is 'name'
-          $rootScope.name = config.name #update own name in title
-      else
-        $scope.editable[key].value = @oldValue
+          $rootScope.name = config.name
 
     $scope.video = false
     $scope.$on 'message.stream', (scope, stream) ->

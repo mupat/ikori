@@ -2,11 +2,7 @@
 <div>
   <h1>Options</h1>
   <p>
-    You appear as <span contenteditable ng-model="name" ng-blur="test(name)"></span> to other peers and your notificions will be hidden after <span contenteditable>{{notification_interval}}</span> seconds.
+    You appear as <span contenteditable ng-model="name" ng-blur="save('name', name)" pattern="^[a-zA-Z0-9]{1,}$"></span> to other peers and your notificions will be hidden after <span ng-model="notificationInterval" ng-blur="save('notificationInterval', notificationInterval)" pattern="^[0-9]{1,}$" contenteditable></span> milliseconds.
   </p>
-  <!-- <div ng-repeat="(key, data) in editable">
-    <label for="{{key}}">{{data.label}}</label>
-    <input name="{{key}}" id="{{key}}" type="{{data.type}}" ng-model="editable[key].value" ng-blur="change(key, editable[key].value)" ng-focus="save(editable[key].value)"/>
-  </div> -->
   <video width="1920" height="1080" id="screen" autoplay ng-show="video"></video>
 </div>

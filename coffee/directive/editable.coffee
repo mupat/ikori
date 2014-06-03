@@ -1,29 +1,41 @@
 class Editable
-  FORMAT: /^[a-zA-Z0-9]{1,}$/
   constructor: ->
     obj = 
       restrict: 'A'
       require: '?ngModel' # get a hold of NgModelController
       link: @run.bind(@)
     return obj
-  
-  #https://docs.angularjs.org/api/ng/type/ngModel.NgModelController
-  #http://stackoverflow.com/questions/16308322/angularjs-attribute-directive-input-value-change
+
   run: (scope, element, attr, ngModel) ->
-    console.log 'here', @, scope, element, attr, ngModel, scope.name, scope[attr.ngModel]
     return unless ngModel # do nothing if no ng-model
 
-    element.on 'blur keyup change', ->
-      scope.$apply
+    # set given values
+    element.data 'oldValue', scope[attr.ngModel]
+    element.data 'pattern', new RegExp(attr.pattern)
 
+    # render value if it should be render from inside the app
     ngModel.$render ->
-      console.log 'render', ngModel
       element.html(ngModel.$viewValue || '')
 
+    # update model on element different element events
     element.on 'blur keyup change', ->
-      scope.$apply ->
-        ngModel.$setViewValue element.html()
+      text = element.html()
+      # test if input matches pattern
+      if element.data('pattern').test text
+        # if it matchs, then set it 
+        element.data 'oldValue', text
+        value = text        
+      else
+        # if it not matchs, then return to previous value
+        element.html element.data('oldValue')
+        value = element.data('oldValue')
 
+      # apply changes
+      scope.$apply ->
+        ngModel.$setViewValue value
+
+    # init value to model and element
     ngModel.$setViewValue scope[attr.ngModel]
+    element.html scope[attr.ngModel]
 
 module.exports = Editable
