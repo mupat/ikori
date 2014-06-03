@@ -3,7 +3,7 @@ EventEmitter = require('events').EventEmitter
 async = require 'async'
 
 class Socket extends EventEmitter
-  QUEUE_CONCURRENCY: 10
+  QUEUE_CONCURRENCY: 1
   TYPES_WEBRTC:
     offer: 'offer'
     answer: 'answer'

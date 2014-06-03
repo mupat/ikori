@@ -1,8 +1,15 @@
-<div>
-  <h2>Peers</h2>
+<div id="status">
+  <input type="checkbox" id="peerListSwitch" ng-click="toggle()" />
+  <label for="peerListSwitch" class="icon-atom"></label>
+  <h2 ng-click="sidebarOpen = false" ng-show="current">{{current}}</h2>
 </div>
-<ul>
-  <li ng-repeat="(uuid, data) in peers | orderBy:data.name" ng-click="startConnection(uuid)">
-    {{data.name}} <span ng-show="data.open">open</span>
-  </li>
-</ul>
+<div>
+  <div>
+    <h2>Peers</h2>
+  </div>
+  <ul>
+    <li ng-repeat="(uuid, data) in peers | orderBy:data.name" ng-click="startConnection(uuid)" ng-class="{open: data.open}">
+      {{data.name}} <span ng-show="data.open">open</span>
+    </li>
+  </ul>
+</div>

@@ -2,6 +2,9 @@ class Peer
   constructor: ($rootScope, $scope, webrtc, peers) ->
     $scope.peers = {}
 
+    $scope.toggle = ->
+      $rootScope.sidebarOpen = !$rootScope.sidebarOpen
+
     $scope.$on 'peer.new', (scope, infos) ->
       $scope.$apply ->
         infos.open = false
@@ -17,6 +20,8 @@ class Peer
         $scope.peers[infos.uuid] = infos
 
     $scope.$on 'channel.open', (scope, uuid) ->
+      $rootScope.sidebarOpen = false
+      $scope.current = $scope.peers[uuid].name
       $scope.$apply ->
         $scope.peers[uuid].open = true
 

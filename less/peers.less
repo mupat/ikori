@@ -1,4 +1,4 @@
-#peers {
+#peers > div:last-child {
   width: @sidebarWidth;
   background-color: @backgroundHighlight;
   height: 100%;
@@ -17,10 +17,15 @@
     .fontLight();
     color: @blue;
     cursor: pointer;
-    .colorTransition();
+    padding: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
-    &:hover {
-      background-color: @background;  
+    &:hover,
+    &.open {
+      background-color: @background;
+      color: @text;
     }
   }
 
@@ -31,6 +36,6 @@
   }
 }
 
-.sidebarOpen #peers {
+.sidebarOpen #peers > div:last-child {
   left: 0;
 }

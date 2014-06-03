@@ -12,12 +12,6 @@
 </head>
 <body class="sidebarOpen" ng-class="{sidebarOpen: sidebarOpen, optionsOpen: optionsOpen}" ng-init="sidebarOpen = true">
   <div id="overlay" ng-click="optionsOpen = false"></div>
-  <div id="status">
-    <input type="checkbox" id="peerListSwitch" ng-click="sidebarOpen = !sidebarOpen" />
-    <label for="peerListSwitch" class="icon-atom"></label>
-    <div ng-click="sidebarOpen = false">
-    </div>
-  </div>
   <div id="peers" ng-controller="PeerCtrl" ng-include="'public/templates/peer.html'"></div>
   <div id="content" ng-click="sidebarOpen = false">
     <div ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'"></div>
