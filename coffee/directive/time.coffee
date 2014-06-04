@@ -4,6 +4,7 @@ class Time
   constructor: ->
     obj = 
       restrict: 'E'
+      replace: true
       link: @run.bind(@)
     return obj
 
