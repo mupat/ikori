@@ -45,6 +45,7 @@ async.waterfall [
     'chatApp.controllers'
     'chatApp.services'
     'chatApp.directives'
+    'luegg.directives'
   ]
   chatApp.value 'CONFIG', results
   chatApp.factory '$exceptionHandler', ->

@@ -9,7 +9,7 @@
   </div>
   <ul>
     <li ng-repeat="(uuid, data) in peers | orderBy:data.name" ng-click="startConnection(uuid)" ng-class="{open: data.open}">
-      {{data.name}} <span ng-show="data.open">open</span>
+      {{data.name}} <!-- <span ng-show="data.open">open</span> -->
     </li>
   </ul>
 </div>

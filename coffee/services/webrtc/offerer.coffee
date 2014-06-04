@@ -3,7 +3,6 @@ Connection = require './connection'
 class Offerer extends Connection
   CHANNEL: "channel"
   constructor: (remote, stream) ->
-    console.log 'create offer', stream
     super remote, stream
 
     @channel = @con.createDataChannel @CHANNEL, @CHANNEL_OPTIONS

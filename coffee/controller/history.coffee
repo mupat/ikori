@@ -35,6 +35,7 @@ class History
       utc = moment.utc(time)
       timezone = moment().zone()
       return utc.subtract('minute', timezone).format(@DATE_FORMAT)
+      # return utc.subtract('minute', timezone).calendar()
 
     $scope.formatOrigin = (origin) =>
       return origin if origin is 'you'

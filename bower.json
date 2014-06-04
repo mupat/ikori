@@ -2,6 +2,7 @@
   "name": "ikori",
   "private": true,
   "dependencies": {
-    "angular": "1.2.16"
+    "angular": "1.2.16",
+    "angularjs-scroll-glue-Luegg": "1.0.1"
   }
 }

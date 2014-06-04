@@ -1,0 +1,65 @@
+#history {
+  height: calc(~"100% - 9rem");
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  width: 100%;
+  &:after {
+    content: '';
+    clear: both;
+  }
+
+  li {
+    list-style: none;
+    overflow: hidden;
+    // padding: 0.5rem 0 1.5rem 0;
+    padding: 0.5rem 0;
+    position: relative;
+    margin-bottom: 1rem;
+
+    &:after {
+      content: '';
+      clear: both;
+    }
+
+    p {
+      font-size: 2rem;
+      color: @blue;
+      display: inline-block;
+      width: 75%;
+      float: left;
+      text-align: left;
+    }
+
+    span {
+      color: darken(@gray, 10%);
+      font-size: 1rem;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    &.own {
+      p {
+        color: darken(@gray, 25%);
+        float: right;
+        text-align: right;
+      }
+
+      span {
+        right: 0;
+        left: inherit;
+      }
+    }
+
+    &.timescope {
+      font-size: 1.5rem;
+      color: @blue;
+      padding: 0.5rem;
+      text-align: center;
+      border-top: 0.1rem @gray solid;
+      border-bottom: 0.1rem @gray solid;
+      clear: both;
+    }
+  }
+}

@@ -78,12 +78,18 @@ class Peer
       clearTimeout @timeout
       @startTimer()
 
+    #try to get history from localstore and parse it to json object
+    try
+      history = JSON.parse(localStorage[context._buildKey(infos.uuid)] || '[]')
+    catch e
+      history = [] #set history an empty object if it couldn't parsed
+
     obj =
       infos: infos
       network: network
       startTimer: start
       resetTimer: reset
-      history: JSON.parse(localStorage[context._buildKey(infos.uuid)] || '[]')
+      history: history
     
     obj.startTimer()
     return obj

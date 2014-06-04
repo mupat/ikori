@@ -3,18 +3,22 @@
 <head>
   <meta charset="utf-8">
   <title>ikori as {{name}}</title>
+  <!-- vendors -->
   <script type="text/javascript" src="public/vendor/angular/angular.js"></script>
+  <script type="text/javascript" src="public/vendor/angularjs-scroll-glue-Luegg/src/scrollglue.js"></script>
+  <!-- own stuff -->
   <script type="text/javascript" src="public/js/controller/index.js"></script>
   <script type="text/javascript" src="public/js/services/index.js"></script>
   <script type="text/javascript" src="public/js/directive/index.js"></script>
   <script type="text/javascript" src="public/js/index.js"></script>
+  <!-- style -->
   <link rel="stylesheet" type="text/css" href="public/css/style.css">
 </head>
 <body ng-class="{sidebarOpen: sidebarOpen, optionsOpen: optionsOpen}">
   <div id="overlay" ng-click="optionsOpen = false"></div>
   <div id="peers" ng-controller="PeerCtrl" ng-include="'public/templates/peer.html'"></div>
   <div id="content" ng-click="sidebarOpen = false">
-    <div ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'"></div>
+    <div id="history" ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'" scroll-glue></div>
     <div id="msg" ng-controller="MsgCtrl" ng-show="open" ng-include="'public/templates/msg.html'"></div>
   </div>
   <div ng-controller="OptionsCtrl" ng-include="'public/templates/options.html'" id="options"></div>

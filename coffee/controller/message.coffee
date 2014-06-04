@@ -2,11 +2,16 @@ class Message
   peer: null 
   constructor: ($rootScope, $scope) ->
     @$scope = $scope
+
+    #define default values
     $scope.open = false
+    $scope.form = {}
+    $scope.form.msg = ''
+
     $scope.send = =>
-      $rootScope.$broadcast 'message.own', $scope.msg, @peer
-      $scope.$apply ->
-        $scope.msg = ''
+      return unless $scope.form.msg? or $scope.form.msg.length is 0
+      $rootScope.$broadcast 'message.own', $scope.form.msg, @peer
+      $scope.form.msg = ''
      
     $scope.screen = =>
       $rootScope.$broadcast 'message.screen', @peer
