@@ -17,7 +17,7 @@
 
   > span {
     position: absolute;
-    left: 0;
+    left: -2rem;
     bottom: 0;
     cursor: pointer;
     font-size: 1.5rem;
@@ -28,11 +28,15 @@
     &:hover {
       color: @blue !important;
     }
+
+    @media @normal {
+      left: 0;
+    }
   }
 }
 
 .sidebarOpen #options > span {
-  color: @background;
+  left: 0;
 }
 
 .optionsOpen {

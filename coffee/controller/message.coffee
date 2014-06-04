@@ -5,7 +5,8 @@ class Message
     $scope.open = false
     $scope.send = =>
       $rootScope.$broadcast 'message.own', $scope.msg, @peer
-      $scope.msg = ''
+      $scope.$apply ->
+        $scope.msg = ''
      
     $scope.screen = =>
       $rootScope.$broadcast 'message.screen', @peer

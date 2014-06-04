@@ -15,7 +15,7 @@
   <div id="peers" ng-controller="PeerCtrl" ng-include="'public/templates/peer.html'"></div>
   <div id="content" ng-click="sidebarOpen = false">
     <div ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'"></div>
-    <div id="msg" ng-controller="MsgCtrl" ng-show="!open" ng-include="'public/templates/msg.html'"></div>
+    <div id="msg" ng-controller="MsgCtrl" ng-show="open" ng-include="'public/templates/msg.html'"></div>
   </div>
   <div ng-controller="OptionsCtrl" ng-include="'public/templates/options.html'" id="options"></div>
 </body>
