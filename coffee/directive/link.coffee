@@ -8,8 +8,10 @@ class Link
     return obj
 
   run: (scope, element, attrs) ->
-    # if link should be open external in system default browser
-    if attrs.target is 'external'
+    console.log 'here'
+    # if link is not forced to be opened in app
+    if attrs.rel isnt 'self'
+      console.log 'add'
       element.on 'click', (event) ->
         event.preventDefault()
         gui.Shell.openExternal attrs.href

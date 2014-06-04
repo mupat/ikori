@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "angular": "1.2.16",
-    "angularjs-scroll-glue-Luegg": "1.0.1"
+    "angularjs-scroll-glue-Luegg": "1.0.1",
+    "Autolinker.js": "0.11.0"
   }
 }
