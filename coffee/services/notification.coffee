@@ -39,7 +39,8 @@ class Notification
     return if @focus # return if the chat has focus from the user
 
     if @config.platform is 'darwin' #show other notification on mac
-      notify {title: origin, message: text, group: @GROUP_ID, sender: @config.bundleIdentifier}
+      # notify {title: origin, message: text, group: @GROUP_ID, sender: @config.bundleIdentifier}
+      notify {title: origin, message: text, group: @GROUP_ID}
     else
       #check if a notification is open
       @_removeNotification() if @notification?

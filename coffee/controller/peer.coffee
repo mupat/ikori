@@ -25,6 +25,8 @@ class Peer
       $rootScope.sidebarOpen = false
       $scope.current = $scope.peers[uuid].name
       $scope.$apply ->
+        for peer in $scope.peers
+          peer.open = false
         $scope.peers[uuid].open = true
 
     $scope.$on 'channel.close', (scope, uuid) ->
