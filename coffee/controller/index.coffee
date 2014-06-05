@@ -21,6 +21,7 @@ chatAppControllers.controller 'MsgCtrl', [
 ]
 chatAppControllers.controller 'HistoryCtrl', [
   '$scope'
+  '$compile'
   'peer'
   HistoryCtrl
 ]

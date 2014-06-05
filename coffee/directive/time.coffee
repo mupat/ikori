@@ -18,6 +18,6 @@ class Time
 
     #check if lasttime day is before actualtime day
     if lastTime.isBefore(actualTime, 'day')
-      element.html '<li class="timescope">' + lastTime.fromNow() + '</li>'
+      element.html "<li class='timescope'>#{lastTime.fromNow()}</li>"
    
 module.exports = Time

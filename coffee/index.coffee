@@ -46,6 +46,7 @@ async.waterfall [
     'chatApp.services'
     'chatApp.directives'
     'luegg.directives'
+    'ngSanitize'
   ]
   chatApp.value 'CONFIG', results
   chatApp.factory '$exceptionHandler', ->

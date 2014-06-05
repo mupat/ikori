@@ -3,7 +3,9 @@ moment = require 'moment'
 class History
   DATE_FORMAT: "YYYY-MM-DD HH:mm:ss"
   peer: null
-  constructor: ($scope, @peers) ->
+  autolinker: new window.Autolinker({ newWindow: false })
+
+  constructor: ($scope, $compile, @peers) ->
     @$scope = $scope
     $scope.history = []
 
@@ -26,20 +28,6 @@ class History
 
     $scope.$on 'peer.close', (scope, uuid) =>
       @_remove uuid
-
-    $scope.$on 'peer.update', (scope, uuid) =>
-      if @peer is uuid
-        $scope.history = window.angular.copy($scope.history)
-
-    $scope.formatTime = (time) =>
-      utc = moment.utc(time)
-      timezone = moment().zone()
-      return utc.subtract('minute', timezone).format(@DATE_FORMAT)
-      # return utc.subtract('minute', timezone).calendar()
-
-    $scope.formatOrigin = (origin) =>
-      return origin if origin is 'you'
-      return @peers.getName(origin)
 
   _createEntry: (msg, origin, uuid) ->
     obj =

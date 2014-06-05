@@ -5,6 +5,7 @@
   <title>ikori as {{name}}</title>
   <!-- vendors -->
   <script type="text/javascript" src="public/vendor/angular/angular.js"></script>
+  <script type="text/javascript" src="public/vendor/angular-sanitize/angular-sanitize.js"></script>
   <script type="text/javascript" src="public/vendor/angularjs-scroll-glue-Luegg/src/scrollglue.js"></script>
   <script type="text/javascript" src="public/vendor/Autolinker.js/dist/Autolinker.js"></script>
   <!-- own stuff -->
@@ -19,13 +20,6 @@
   <div id="overlay" ng-click="optionsOpen = false"></div>
   <div id="peers" ng-controller="PeerCtrl" ng-include="'public/templates/peer.html'"></div>
   <div id="content" ng-click="sidebarOpen = false">
-    <a href="test">xvb</a>
-    <historymessage>test</historymessage>
-    <historymessage>neu {{test}}</historymessage>
-    <historymessage>text with short google.de</historymessage>
-    <historymessage>text with middle www.google.de</historymessage>
-    <historymessage>text with long http://www.google.de</historymessage>
-    <historymessage>email test@†est.de</historymessage>
     <div id="history" ng-controller="HistoryCtrl" ng-include="'public/templates/history.html'" scroll-glue></div>
     <div id="msg" ng-controller="MsgCtrl" ng-show="open" ng-include="'public/templates/msg.html'"></div>
   </div>

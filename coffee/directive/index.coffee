@@ -8,5 +8,5 @@ chatAppControllers = angular.module 'chatApp.directives', []
 
 chatAppControllers.directive 'contenteditable', -> new Editable()
 chatAppControllers.directive 'historytime', -> new Time()
-chatAppControllers.directive 'historymessage', ($timeout, $compile) -> new Text($timeout, $compile)
+chatAppControllers.directive 'historymessage', ($compile) -> new Text($compile)
 chatAppControllers.directive 'a', -> new Link()

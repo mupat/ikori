@@ -30,3 +30,12 @@ h2 {
   color: @blue;
   text-align: center;
 }
+
+a {
+  color: @blue;
+  text-decoration: none;
+  .colorTransition();
+  &:hover {
+    color: @text;
+  }
+}

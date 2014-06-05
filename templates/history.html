@@ -2,7 +2,7 @@
   <div ng-repeat="line in history track by $index | orderBy:line.time">
     <historytime actualTime="{{line.time}}" lastTime="{{history[$index - 1].time}}"></historytime>
     <li  ng-class="{own: line.origin == 'you'}">
-      <p>{{line.msg}}</p> 
+      <historymessage text="{{line.msg}}"></historymessage>
       <!-- <span>{{formatTime(line.time)}}</span> -->
     </li>
   </div>
