@@ -24,7 +24,6 @@ class Message
 
     $scope.$on 'channel.open', (scope, uuid) =>
       @peer = uuid
-      # $scope.$apply ->
       $scope.form.open = true
 
   _remove: (uuid) ->

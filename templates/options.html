@@ -2,7 +2,7 @@
 <div>
   <h1>Options</h1>
   <p>
-    You appear as <span contenteditable ng-model="name" ng-blur="save('name', name)" pattern="^[a-zA-Z0-9]{1,}$"></span> to other peers and your notifications will be hidden after <span ng-model="notificationInterval" ng-blur="save('notificationInterval', notificationInterval)" pattern="^[0-9]{1,}$" contenteditable></span> milliseconds.
+    You appear as <span contenteditable ng-model="name" ng-blur="save('name', name)" pattern="^(\w)+(\s.+(\w)+)?$"></span> to other peers and your notifications will be hidden after <span ng-model="notificationInterval" ng-blur="save('notificationInterval', notificationInterval)" pattern="^[0-9]{1,}$" contenteditable></span> milliseconds.
   </p>
   <!-- <video width="1920" height="1080" id="screen" autoplay ng-show="video"></video> -->
 </div>
