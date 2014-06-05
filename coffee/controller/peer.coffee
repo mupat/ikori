@@ -1,6 +1,7 @@
 class Peer
   constructor: ($rootScope, $scope, webrtc, peers) ->
     $scope.peers = {}
+    $scope.current = null
 
     $scope.toggle = ->
       $rootScope.sidebarOpen = !$rootScope.sidebarOpen
@@ -12,6 +13,7 @@ class Peer
 
     $scope.$on 'peer.remove', (scope, infos) ->
       $scope.$apply ->
+        $scope.current = null
         delete $scope.peers[infos.uuid]
 
     $scope.$on 'peer.update', (scope, infos) ->
@@ -27,6 +29,7 @@ class Peer
 
     $scope.$on 'channel.close', (scope, uuid) ->
       $scope.$apply ->
+        $scope.current = null
         $scope.peers[uuid].open = false if $scope.peers[uuid]?
 
     $scope.startConnection = (uuid) ->

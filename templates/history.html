@@ -1,5 +1,8 @@
+<div ng-show="!history.peer" class="default">
+  Select a peer to start
+</div>
 <ul>
-  <div ng-repeat="line in history track by $index | orderBy:line.time">
+  <div ng-repeat="line in history.log track by $index | orderBy:line.time">
     <historytime actualTime="{{line.time}}" lastTime="{{history[$index - 1].time}}"></historytime>
     <li  ng-class="{own: line.origin == 'you'}">
       <historymessage text="{{line.msg}}"></historymessage>
